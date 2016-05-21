@@ -1,0 +1,67 @@
+!SESSION 2016-05-21 10:57:07.811 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-05-21 10:58:17.392
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\nick'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-05-21 10:58:47.271
+!MESSAGE Could not check Vaadin version in project RemoteSystemsTempFiles
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-05-21 10:58:47.276
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-05-21 10:58:47.471
+!MESSAGE starting IvyDE plugin
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-05-21 10:58:47.573
+!MESSAGE IvyDE plugin started
+
+!ENTRY com.vaadin.integration.eclipse 4 0 2016-05-21 10:59:00.609
+!MESSAGE 
+!STACK 1
+Java Model Exception: Java Model Status [RemoteSystemsTempFiles does not exist]
+	at org.eclipse.jdt.internal.core.JavaElement.newJavaModelException(JavaElement.java:566)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:247)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:579)
+	at org.eclipse.jdt.internal.core.JavaElement.getElementInfo(JavaElement.java:316)
+	at org.eclipse.jdt.internal.core.JavaElement.getElementInfo(JavaElement.java:302)
+	at org.eclipse.jdt.internal.core.JavaProject.getJavaProjectElementInfo(JavaProject.java:1642)
+	at org.eclipse.jdt.internal.core.JavaProject.newNameLookup(JavaProject.java:2329)
+	at org.eclipse.jdt.internal.core.JavaProject.newNameLookup(JavaProject.java:2339)
+	at org.eclipse.jdt.internal.core.JavaProject.findType(JavaProject.java:1357)
+	at org.eclipse.jdt.internal.core.JavaProject.findType(JavaProject.java:1264)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.findVaadinUiType(ProjectUtil.java:211)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.isVaadin7(ProjectUtil.java:515)
+	at com.vaadin.integration.eclipse.CheckAddonStylesBuilderJob.run(CheckAddonStylesBuilderJob.java:26)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 org.eclipse.jdt.core 4 969 2016-05-21 10:59:00.611
+!MESSAGE RemoteSystemsTempFiles does not exist
+
+!ENTRY org.eclipse.egit.ui 4 0 2016-05-21 11:00:58.126
+!MESSAGE The process cannot access the file because another process has locked a portion of the file
+!STACK 0
+java.io.IOException: The process cannot access the file because another process has locked a portion of the file
+	at java.io.FileInputStream.readBytes(Native Method)
+	at java.io.FileInputStream.read(Unknown Source)
+	at org.eclipse.jgit.util.IO.readFully(IO.java:303)
+	at org.eclipse.jgit.internal.storage.file.ObjectDirectoryInserter.insert(ObjectDirectoryInserter.java:103)
+	at org.eclipse.jgit.api.AddCommand.call(AddCommand.java:228)
+	at org.eclipse.egit.ui.internal.staging.StagingView$49.run(StagingView.java:2552)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
