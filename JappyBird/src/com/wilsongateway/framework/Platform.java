@@ -7,7 +7,6 @@ import com.wilsongateway.framework.Board.Stage;
 
 public class Platform extends Tile{
 	
-	private static double scaler = 1;
 	private static double speed;
 
 	protected static ArrayList<Platform> platforms = new ArrayList<Platform>();
@@ -44,9 +43,6 @@ public class Platform extends Tile{
 				platforms.remove(i);
 			}
 		}
-		
-		//Adjust speed for resizing window
-		speed = Game.heightRatio()*Board.speedScaler;
 	}
 
 	@Override
@@ -58,7 +54,7 @@ public class Platform extends Tile{
 		g2d.drawImage(Game.getPlatform(), Board.roundMid(position), Game.boardPanel.getHeight()-platformHeight, null);
 		
 		if(Board.current == Stage.PLAYING){
-			position -= speed * scaler;
+			position -= Game.heightRatio()*Board.speedScaler;
 		}
 	}
 	

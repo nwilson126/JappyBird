@@ -2,7 +2,11 @@ package com.wilsongateway.framework;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import com.wilsongateway.framework.Board.Stage;
@@ -18,6 +22,9 @@ public class Player {
 	public final static double thetaCutOff = 1;
 	private int binding = KeyEvent.VK_SPACE;
 	
+	//Collision Border
+	private Shape outline;
+	
 	private boolean alive;
 	
 	private static ArrayList<Player> players = new ArrayList<Player>();
@@ -25,12 +32,11 @@ public class Player {
 	public Player(){
 		resetPlayer();
 		players.add(this);
-		alive = true;
 	}
 	
 	public void resetPlayer(){
-		y = Game.getDayBackground().getHeight(null)/3;
-		x = Game.getDayBackground().getWidth(null)/2;
+		y = Game.dayBackground.getHeight(null)/2;
+		x = Game.boardPanel.getWidth()/2 - Game.getFlappyUp().getWidth(null)/2;
 		alive = true;
 	}
 	
@@ -39,6 +45,9 @@ public class Player {
 			if(Board.current == Stage.PLAYING){
 				velY += accY;
 				y += velY;
+				if(y < 0){
+					y = 0;
+				}
 				
 				//Deceleration
 				if(accY < accCutOff){
@@ -51,12 +60,19 @@ public class Player {
 				}
 			}
 		}else{
-			x -= Game.heightRatio()*Board.speedScaler;
+			Board.current = Stage.DEATHMENU;
+			//Call death menu animations
 		}
+		
 		g2d.rotate(theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);
 		g2d.drawImage(Game.getFlappy(), x, (int) (Game.heightRatio()*y), null);
 		
 		checkCollision();
+		
+		//Dev Render Border
+		if(Board.devMode){
+			g2d.draw(outline);
+		}
 	}
 	
 	public void flap(){
@@ -69,10 +85,19 @@ public class Player {
 	
 	public void checkCollision(){
 		//Check floor collision (y is inverted)
-		//System.out.println(y + "    " + (Game.getDayBackground().getHeight(null) - Game.getPlatform().getHeight(null)));
-		//TODO
 		if(Game.heightRatio()*y + Game.getFlappyUp().getHeight(null) > Game.getDayBackground().getHeight(null) - Game.getPlatform().getHeight(null)){
 			alive = false;
+		}
+		
+		//Refresh outline
+		outline = new Ellipse2D.Double(x, (int) (Game.heightRatio()*y), Game.getFlappyUp().getWidth(null), Game.getFlappyUp().getHeight(null));
+		
+		for(Pipe pipe : Pipe.getPipes()){
+			for(Rectangle2D s : pipe.getOutlines()){
+				if(outline.intersects(s)){
+					alive = false;
+				}
+			}
 		}
 	}
 
@@ -81,4 +106,5 @@ public class Player {
 	public int getKeyBind(){return binding;}
 	public void setKeyBind(int binding){this.binding = binding;}
 	public boolean isAlive(){return alive;}
+	public Shape getOutline(){return outline;}
 }

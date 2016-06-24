@@ -1,6 +1,9 @@
 package com.wilsongateway.framework;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -90,6 +93,17 @@ public class Pipe extends Tile{
 		y = gen.nextInt(Game.getDayBackground().getHeight(null) - Game.getPlatform().getHeight(null) - 2*heightSpacing - gap);
 	}
 	
+	public Rectangle2D[] getOutlines(){
+		Rectangle2D top = new Rectangle(Board.roundMid(position),y - Game.getPipeTop().getHeight(null) + heightSpacing,
+				Game.getPipeTop().getWidth(null),Game.getPipeTop().getHeight(null));
+		Rectangle2D bottom = new Rectangle(Board.roundMid(position),y + gap,
+				Game.getPipeBottom().getWidth(null),Game.getPipeBottom().getHeight(null));
+		
+		return new Rectangle2D[]{top, bottom};
+	}
+	
 	//Boilerplate
 	public static ArrayList<Pipe> getPipes(){return pipes;}
+	public int getGapTopY(){return y;}
+	public int getGapBottomY(){return y + gap;}
 }

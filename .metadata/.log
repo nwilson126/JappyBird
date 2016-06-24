@@ -65,3 +65,189 @@ java.io.IOException: The process cannot access the file because another process 
 	at org.eclipse.jgit.api.AddCommand.call(AddCommand.java:228)
 	at org.eclipse.egit.ui.internal.staging.StagingView$49.run(StagingView.java:2552)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SESSION 2016-05-21 22:57:36.227 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-05-21 22:58:08.197
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\nick'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-05-21 22:58:16.318
+!MESSAGE starting IvyDE plugin
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-05-21 22:58:16.696
+!MESSAGE IvyDE plugin started
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-05-21 22:58:38.171
+!MESSAGE Could not check Vaadin version in project JappyBird
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-05-21 22:58:38.171
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-05-21 22:58:38.187
+!MESSAGE Could not check Vaadin version in project RemoteSystemsTempFiles
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-05-21 22:58:38.187
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+!SESSION 2016-05-22 14:51:27.918 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-05-22 14:52:12.366
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\nick'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-05-22 14:52:41.927
+!MESSAGE Could not check Vaadin version in project JappyBird
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-05-22 14:52:41.933
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-05-22 14:52:41.947
+!MESSAGE Could not check Vaadin version in project RemoteSystemsTempFiles
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-05-22 14:52:41.948
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+!SESSION 2016-06-24 00:23:48.892 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-06-24 00:24:31.506
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\nick'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-06-24 00:25:01.194
+!MESSAGE Could not check Vaadin version in project JappyBird
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-06-24 00:25:01.198
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-06-24 00:25:01.209
+!MESSAGE Could not check Vaadin version in project RemoteSystemsTempFiles
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-06-24 00:25:01.210
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-06-24 00:25:24.709
+!MESSAGE starting IvyDE plugin
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-06-24 00:25:24.773
+!MESSAGE IvyDE plugin started
+!SESSION 2016-06-24 11:25:10.497 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_73
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2016-06-24 11:26:00.558
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\nick'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-06-24 11:26:30.006
+!MESSAGE Could not check Vaadin version in project JappyBird
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-06-24 11:26:30.010
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY com.vaadin.integration.eclipse 2 0 2016-06-24 11:26:30.021
+!MESSAGE Could not check Vaadin version in project RemoteSystemsTempFiles
+!STACK 1
+org.eclipse.core.runtime.CoreException: Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+	at com.vaadin.integration.eclipse.util.ErrorUtil.newCoreException(ErrorUtil.java:141)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getWebInfLibFolder(ProjectUtil.java:110)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryInProject(ProjectUtil.java:376)
+	at com.vaadin.integration.eclipse.util.ProjectUtil.getVaadinLibraryVersion(ProjectUtil.java:351)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.getVaadinProjects(CheckVaadinVersionsJob.java:100)
+	at com.vaadin.integration.eclipse.background.CheckVaadinVersionsJob.run(CheckVaadinVersionsJob.java:63)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SUBENTRY 1 com.vaadin.integration.eclipse 4 0 2016-06-24 11:26:30.021
+!MESSAGE Unable to find WEB-INF/lib folder. Ensure the project is a dynamic web project.
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-06-24 11:40:33.381
+!MESSAGE starting IvyDE plugin
+
+!ENTRY org.apache.ivyde.eclipse 1 0 2016-06-24 11:40:33.464
+!MESSAGE IvyDE plugin started

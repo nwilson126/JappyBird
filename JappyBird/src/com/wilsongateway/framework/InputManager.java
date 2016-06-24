@@ -11,6 +11,8 @@ import com.wilsongateway.framework.Board.Stage;
 
 public class InputManager implements KeyListener, MouseListener, ComponentListener{
 
+	private boolean keyHeld = false;
+	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
@@ -51,12 +53,15 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 			}
 		}
 		
-		//Check player bindings
-		for(Player p : Player.getPlayers()){
-			if(key.getKeyCode() == p.getKeyBind()){
-				p.flap();
+		if(!keyHeld){
+			//Check player bindings
+			for(Player p : Player.getPlayers()){
+				if(key.getKeyCode() == p.getKeyBind()){
+					p.flap();
+				}
 			}
 		}
+		keyHeld = true;
 		
 		//Begin game on standby
 		if(Board.current == Stage.STANDBY){
@@ -66,8 +71,7 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		keyHeld = false;
 	}
 
 	@Override
