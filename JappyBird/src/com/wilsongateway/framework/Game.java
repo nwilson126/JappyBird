@@ -74,7 +74,8 @@ public class Game {
 	
 	private void loadSprites(){
 		try {
-			atlas = ImageIO.read(new File("images/atlas.png"));
+			//atlas = ImageIO.read(new File("images/atlas.png"));
+			atlas = ImageIO.read(getClass().getResource("atlas.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;

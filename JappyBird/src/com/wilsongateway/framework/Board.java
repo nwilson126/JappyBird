@@ -22,9 +22,9 @@ public class Board extends JPanel{
 		current = Stage.PLAYING;
 	}
 	
-	public void resetGame(){
+	public static void resetGame(){
 		current = Stage.STANDBY;
-		Game.player.resetPlayer();
+		Tile.refreshTiles();
 	}
 	
 	@Override

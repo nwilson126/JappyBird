@@ -15,9 +15,9 @@ public class Player {
 	
 	private int x;
 	private double y;
-	private double velY = 0;
-	private double accY = 0;
-	private double theta = 0;
+	private double velY;
+	private double accY;
+	private double theta;
 	public final static double accCutOff = 0.3;
 	public final static double thetaCutOff = 1;
 	private int binding = KeyEvent.VK_SPACE;
@@ -37,6 +37,10 @@ public class Player {
 	public void resetPlayer(){
 		y = Game.dayBackground.getHeight(null)/2;
 		x = Game.boardPanel.getWidth()/2 - Game.getFlappyUp().getWidth(null)/2;
+		velY = 0;
+		accY = 0;
+		theta = 0;
+		
 		alive = true;
 	}
 	
@@ -60,8 +64,11 @@ public class Player {
 				}
 			}
 		}else{
-			Board.current = Stage.DEATHMENU;
+			//Board.current = Stage.DEATHMENU;
 			//Call death menu animations
+			
+			//TEMP
+			Board.resetGame();
 		}
 		
 		g2d.rotate(theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);

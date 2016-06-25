@@ -3,12 +3,13 @@ TODOS
 
 		velocity scaling
 		speed scaling
-	consistent fps
+	consistent fps(Still minor issues with fullscreen mode)
 		flappy bird sprite
 		flappy bird animation
 menus
 gamemodes
-pipe collision and ceiling
+		pipe collision
+ceiling collision
 sound
 multiplayer(Basic sockets)
 achievments
@@ -18,4 +19,5 @@ local multiplayer
 Logo edit
 boot screen
 loading screen
-screen management system
+resizing screen
+screen management system(MVC Cleanup/refactoring)
