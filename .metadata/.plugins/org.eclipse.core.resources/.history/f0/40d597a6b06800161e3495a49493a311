@@ -1,0 +1,18 @@
+package com.wilsongateway.framework;
+
+import java.util.ArrayList;
+
+public class Transition {
+	
+	public enum TransitionType {FLASH, LOGO_SLIDE, LOGO_SLIDE_VERTICAL, FADE_TO_BLACK};
+	
+	private TransitionType type;
+	
+	private ArrayList<Transition> transitions = new ArrayList<Transition>();
+	
+	Transition(TransitionType type){
+		this.type = type;
+	}
+	
+	public ArrayList<Transition> getTransitions(){return transitions;}
+}

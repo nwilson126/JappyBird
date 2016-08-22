@@ -1,0 +1,5 @@
+package com.wilsongateway.framework;
+
+public class FlashTransition {
+
+}

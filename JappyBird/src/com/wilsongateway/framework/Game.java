@@ -65,7 +65,7 @@ public class Game {
 		
 		//Create main player and set initial scene
 		player = new Player();
-		Board.current = Stage.STANDBY;
+		Board.current = Stage.MAINMENU;
 	}
 	
 	public static void main(String [] args){

@@ -1,0 +1,20 @@
+package com.wilsongateway.framework;
+
+import java.awt.Graphics2D;
+
+import com.wilsongateway.framework.Board.Stage;
+
+public class FlashTransition extends Transition{
+
+	FlashTransition(TransitionType type, Stage destinationStage, int length) {
+		super(type, destinationStage, length);
+		
+	}
+
+	@Override
+	protected void paintTransition(Graphics2D g2d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -57,8 +57,12 @@ public class Background extends Tile{
 		
 		g2d.drawImage(Game.getDayBackground(), Board.roundMid(position), 0, null);
 		
-		if(Board.movingBackground && (Board.current == Stage.PLAYING || Board.current == Stage.STANDBY)){
+		switch(Board.current){
+		case PLAYING:
+		case STANDBY:
+		case MAINMENU:
 			position -= speed * scaler;
+			break;
 		}
 	}
 	

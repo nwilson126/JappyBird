@@ -52,18 +52,18 @@ public class Pipe extends Tile{
 		if(pipes.size() == 0){
 			//Creating all new Tiles, adds width + tileWidth for overlap
 			for(int position = 0; position < Game.boardPanel.getWidth() + pipeSpacing; position += pipeSpacing){
-				new Pipe(position + Game.width);
+				new Pipe(position + Game.width/2 + gap);
 			}
 		}else{
 			//Re-assign the old Tiles
 			int i = 0;
 			for(int position = 0; position < Game.boardPanel.getWidth() + pipeSpacing; position += pipeSpacing){
 				if(i < pipes.size()){
-					pipes.get(i).setPosition(position + Game.width);
+					pipes.get(i).setPosition(position + Game.width/2 + gap);
 					pipes.get(i).resetHeight();
 				}else{
 					//Create extra tiles if there isn't enough
-					new Pipe(position + Game.width);
+					new Pipe(position + Game.width/2 + gap);
 				}
 				i++;
 			}

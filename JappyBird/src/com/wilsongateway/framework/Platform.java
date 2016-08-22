@@ -53,7 +53,8 @@ public class Platform extends Tile{
 		
 		g2d.drawImage(Game.getPlatform(), Board.roundMid(position), Game.boardPanel.getHeight()-platformHeight, null);
 		
-		if(Board.current == Stage.PLAYING){
+		//Controls movement of game object with respect to the 'current' Stage enum.
+		if(Board.current == Stage.PLAYING || Board.current == Stage.MAINMENU){
 			position -= Game.heightRatio()*Board.speedScaler;
 		}
 	}
