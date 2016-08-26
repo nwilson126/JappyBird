@@ -98,7 +98,7 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 			Game.mainFrame.setSize(Game.width, Game.height);
 		}
 		
-//		new FlashTransition(Stage.STANDBY, 120);
+		new FlashTransition(Stage.STANDBY, 120);
 		Game.refreshScaledImages();
 		Tile.refreshTiles();
 	}

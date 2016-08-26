@@ -19,7 +19,7 @@ public class Board extends JPanel{
 	public static boolean devMode = false;
 	
 	public Board(){
-		current = Stage.MAINMENU;
+		current = Stage.PLAYING;
 	}
 	
 	public static void resetGame(){
