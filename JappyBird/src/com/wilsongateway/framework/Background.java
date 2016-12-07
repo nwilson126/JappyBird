@@ -59,9 +59,9 @@ public class Background extends Tile{
 		
 		switch(Board.current){
 		case PLAYING:
-		case STANDBY:
-		case MAINMENU:
-			position -= speed * scaler;
+			position -= speed * scaler * Board.speedScaler;
+			break;
+		default:
 			break;
 		}
 	}

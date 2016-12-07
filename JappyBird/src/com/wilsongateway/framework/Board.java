@@ -1,25 +1,27 @@
 package com.wilsongateway.framework;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import com.wilsongateway.framework.Board.Stage;
+
+@SuppressWarnings("serial")
 public class Board extends JPanel{
 	
-	public static double speedScaler = 2;
+	public static volatile double speedScaler = 2;
 	public static double backgroundScaler = 0.5;
 	public static boolean movingBackground = true;
 	
 	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY, DEATHMENU}
 	public static Stage current;
 	
-	public static int currentDistance = 0;
-	
 	public static boolean devMode = false;
 	
 	public Board(){
-		current = Stage.MAINMENU;
+		current = Stage.STANDBY;
 	}
 	
 	public static void resetGame(){
@@ -36,6 +38,7 @@ public class Board extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
+		//Paint background tiles
 		for(Background b : Background.getBackgrounds()){
 			b.paintTile(g2d);
 		}
@@ -47,8 +50,20 @@ public class Board extends JPanel{
 			}
 		}
 
+		//Paint platforms
 		for(Platform pf : Platform.getPlatforms()){
 			pf.paintTile(g2d);
+		}
+		
+		//Render logo if in standby
+		if(current == Stage.STANDBY && Game.getJappyLogo() != null){
+			g2d.drawImage(Game.getJappyLogo(), Game.boardPanel.getWidth()/2 - Game.getJappyLogo().getWidth(null)/2, Game.boardPanel.getHeight()/4, null);
+		}
+		
+		//Render score if playing
+		if(current == Stage.PLAYING){
+			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*32)));
+			g2d.drawString(Game.player.getPoints() + "", Game.boardPanel.getWidth()/2, Game.boardPanel.getHeight()/10);
 		}
 		
 		//Render Player if not in main menu
@@ -58,20 +73,10 @@ public class Board extends JPanel{
 			}
 		}
 		
-		renderLogo();
-		
 		if(!Transition.getTransitions().isEmpty()){
 			for(Transition t : Transition.getTransitions()){
 				t.runTransition(g2d);
 			}
-		}
-	}
-	
-	private void renderLogo(){
-		if(current == Stage.STANDBY){
-			//Render logo
-		}else{
-			
 		}
 	}
 	

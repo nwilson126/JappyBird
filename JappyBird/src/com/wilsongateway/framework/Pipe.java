@@ -22,7 +22,10 @@ public class Pipe extends Tile{
 	//Pipe placement variables
 	protected static double scaler = 1;
 	protected static double speed;
-	protected static int spacing = 3;
+	public static int spacing = 3;
+	
+	//Keeps track if this pipe has been counted towards score
+	boolean scored = false;
 
 	//ArrayList of all pipe objects
 	private static ArrayList<Pipe> pipes = new ArrayList<Pipe>();
@@ -46,8 +49,6 @@ public class Pipe extends Tile{
 		//Adjust speed for resizing window
 		speed = Game.heightRatio()*Board.speedScaler;
 		
-		//System.out.println("heightRatio: " + Game.heightRatio() + " platformRatio: " + ((double)Game.getPlatform().getWidth(null)/336.0));
-		
 		//Check if it is a new board
 		if(pipes.size() == 0){
 			//Creating all new Tiles, adds width + tileWidth for overlap
@@ -61,6 +62,7 @@ public class Pipe extends Tile{
 				if(i < pipes.size()){
 					pipes.get(i).setPosition(position + Game.width/2 + gap);
 					pipes.get(i).resetHeight();
+					pipes.get(i).setScored(false);
 				}else{
 					//Create extra tiles if there isn't enough
 					new Pipe(position + Game.width/2 + gap);
@@ -76,9 +78,16 @@ public class Pipe extends Tile{
 
 	@Override
 	public void paintTile(Graphics2D g2d){
+		//Reset pipe at right side
 		if(position + pipeSpacing < 0){
 			position = (pipes.size()-1) * pipeSpacing;
 			resetHeight();
+			
+			//Set as uncounted in score
+			scored = false;
+		}else if(scored == false && position < Game.player.getX()){
+			scored = true;
+			Game.player.addPoint();
 		}
 		
 		g2d.drawImage(Game.getPipeBottom(), Board.roundMid(position), y - Game.getPipeTop().getHeight(null) + heightSpacing, null);
@@ -106,4 +115,5 @@ public class Pipe extends Tile{
 	public static ArrayList<Pipe> getPipes(){return pipes;}
 	public int getGapTopY(){return y;}
 	public int getGapBottomY(){return y + gap;}
+	public void setScored(boolean value){scored = value;}
 }

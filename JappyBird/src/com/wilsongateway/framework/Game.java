@@ -1,5 +1,8 @@
 package com.wilsongateway.framework;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -11,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 
 import com.wilsongateway.framework.Board.Stage;
 
@@ -25,6 +29,7 @@ public class Game {
 	//Static game variables
 	public static Thread tick;
 	public static JFrame mainFrame;
+	public static SettingsFrame settingsFrame;
 	public static Board boardPanel;
 	public static double flappyTick = 0;
 	public static Player player;
@@ -38,6 +43,7 @@ public class Game {
 	private static BufferedImage flappyUp;
 	private static BufferedImage flappyMid;
 	private static BufferedImage flappyDown;
+	private static BufferedImage jappyLogo;
 	
 	public static Image scaledDayBackground;
 	private static Image scaledPlatform;
@@ -46,12 +52,29 @@ public class Game {
 	private static Image scaledFlappyUp;
 	private static Image scaledFlappyMid;
 	private static Image scaledFlappyDown;
+	private static Image scaledJappyLogo;
 	
 	
 	private Game(){
+		loadResources();
+		
 		boardPanel = new Board();
 		
-		initGui();
+		mainFrame = new JFrame("JappyBird");
+		mainFrame.setSize(width, height);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setLocationRelativeTo(null);
+		mainFrame.setVisible(true);
+		mainFrame.setAlwaysOnTop(true);
+		mainFrame.add(boardPanel);
+		
+		settingsFrame = new SettingsFrame();
+		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		settingsFrame.setLocationRelativeTo(mainFrame);
+		refreshSettingsFrameLocation();
+		settingsFrame.setAlwaysOnTop(true);
+		settingsFrame.setVisible(true);
+		
 		loadSprites();
 		
 		Tile.refreshTiles();
@@ -62,23 +85,41 @@ public class Game {
 		mainFrame.addMouseListener(manager);
 		mainFrame.addKeyListener(manager);
 		mainFrame.addComponentListener(manager);
+		mainFrame.addWindowStateListener(manager);
 		
 		//Create main player and set initial scene
 		player = new Player();
 	}
 	
-	public static void main(String [] args){
-		new Game();
-	}
-	
-	private void loadSprites(){
+	private void loadResources() {
+		//Load sprite sheet
 		try {
-			//atlas = ImageIO.read(new File("images/atlas.png"));
 			atlas = ImageIO.read(getClass().getResource("atlas.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
+		
+		//Load fonts
+		try {
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/FlappyBirdy.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/04B_19__.TTF")));
+		} catch (IOException | FontFormatException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
+
+	public static void refreshSettingsFrameLocation() {
+		settingsFrame.setLocation(mainFrame.getX() + mainFrame.getWidth(), mainFrame.getY());
+	}
+
+	public static void main(String [] args){
+		new Game();
+	}
+	
+	private void loadSprites(){
 		dayBackground = atlas.getSubimage(0, 0, 288, 512);
 		platform = atlas.getSubimage(584, 0, 336, 112);
 		pipeTop = atlas.getSubimage(168, 646, 52, 320);
@@ -86,18 +127,9 @@ public class Game {
 		flappyUp = atlas.getSubimage(6, 982, 33, 23);
 		flappyMid = atlas.getSubimage(62, 982, 33, 23);
 		flappyDown = atlas.getSubimage(118, 982, 33, 23);
+		
+		jappyLogo = atlas.getSubimage(713, 182, 168, 48);
 		refreshScaledImages();
-	}
-	
-	private void initGui(){
-		mainFrame = new JFrame("JappyBird");
-		mainFrame.setSize(width, height);
-		
-		mainFrame.add(boardPanel);
-		
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setVisible(true);
 	}
 	
 	private void initTick(){
@@ -120,11 +152,12 @@ public class Game {
 						if(sleepTime < 10){
 							fps--;
 							sleepTime = 0;
-							System.out.println("FPS: " + fps);
 						}else if(fps < fpsCap){
 							fps++;
-							System.out.println("FPS: " + fps);
+						}else if(fps > fpsCap){
+							fps--;
 						}
+						settingsFrame.refreshFPSLabel();
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -145,6 +178,7 @@ public class Game {
 		scaledFlappyUp = flappyUp.getScaledInstance(-1, (int) (heightRatio()*flappyUp.getHeight()), Image.SCALE_FAST);
 		scaledFlappyMid = flappyMid.getScaledInstance(-1, (int) (heightRatio()*flappyMid.getHeight()), Image.SCALE_FAST);
 		scaledFlappyDown = flappyDown.getScaledInstance(-1, (int) (heightRatio()*flappyDown.getHeight()), Image.SCALE_FAST);
+		scaledJappyLogo = jappyLogo.getScaledInstance(-1, (int) (heightRatio()*jappyLogo.getHeight()), Image.SCALE_FAST);
 	}
 	
 	public static double heightRatio(){
@@ -185,4 +219,5 @@ public class Game {
 	public static Image getPipeTop(){return scaledPipeTop;}
 	public static Image getPipeBottom(){return scaledPipeBottom;}
 	public static Image getFlappyUp(){return scaledFlappyUp;}
+	public static Image getJappyLogo(){return scaledJappyLogo;}
 }

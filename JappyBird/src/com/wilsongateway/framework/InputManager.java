@@ -6,10 +6,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 
 import com.wilsongateway.framework.Board.Stage;
 
-public class InputManager implements KeyListener, MouseListener, ComponentListener{
+public class InputManager implements KeyListener, MouseListener, ComponentListener, WindowStateListener{
 
 	private boolean keyHeld = false;
 	
@@ -75,21 +77,14 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
-	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void componentHidden(ComponentEvent e) {}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
+		Game.refreshSettingsFrameLocation();
 	}
 
 	@Override
@@ -98,15 +93,18 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 			Game.mainFrame.setSize(Game.width, Game.height);
 		}
 		
-//		new FlashTransition(Stage.STANDBY, 120);
+		Game.refreshSettingsFrameLocation();
+		
 		Game.refreshScaledImages();
-		Tile.refreshTiles();
+		Board.resetGame();
 	}
 
 	@Override
-	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void componentShown(ComponentEvent e) {}
+
+	@Override
+	public void windowStateChanged(WindowEvent arg0) {
+		Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
 	}
 
 }

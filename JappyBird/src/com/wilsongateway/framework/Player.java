@@ -26,6 +26,7 @@ public class Player {
 	private Shape outline;
 	
 	private boolean alive;
+	private int points = 0;
 	
 	private static ArrayList<Player> players = new ArrayList<Player>();
 	
@@ -42,6 +43,7 @@ public class Player {
 		theta = 0;
 		
 		alive = true;
+		points = 0;
 	}
 	
 	public void paintPlayer(Graphics2D g2d){
@@ -64,10 +66,7 @@ public class Player {
 				}
 			}
 		}else{
-			//Board.current = Stage.DEATHMENU;
-			//Call death menu animations
-			
-			//TEMP
+			Game.settingsFrame.refreshMaxScoreLabel();
 			Board.resetGame();
 		}
 		
@@ -107,6 +106,10 @@ public class Player {
 			}
 		}
 	}
+	
+	public void addPoint(){
+		points++;
+	}
 
 	//Boilerplate
 	public static ArrayList<Player> getPlayers() {return players;}
@@ -114,4 +117,6 @@ public class Player {
 	public void setKeyBind(int binding){this.binding = binding;}
 	public boolean isAlive(){return alive;}
 	public Shape getOutline(){return outline;}
+	public int getX(){return x;}
+	public int getPoints(){return points;}
 }
