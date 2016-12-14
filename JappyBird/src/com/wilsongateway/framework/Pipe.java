@@ -9,6 +9,24 @@ import java.util.Random;
 
 import com.wilsongateway.framework.Board.Stage;
 
+/**
+ * Name	 	: Nicholas Lane Wilson
+ * Class 	    : 1620 - 002
+ * Program # 	: 7
+ * Due Date  	: 12/7/2016
+ *
+ * Honor Pledge:  On my honor as a student of the University
+ *                of Nebraska at Omaha, I have neither given nor received
+ *                unauthorized help on this homework assignment.
+ *
+ * NAME: Nicholas Lane Wilson
+ * NUID: 350
+ * EMAIL: nlwilson@unomaha.edu
+ * 
+ * Partners:   NONE
+ *	
+ * Description: Represents a pipe game tile. Moves across screen at a constant rate and detects if the current player collides with itself.
+ */
 public class Pipe extends Tile{
 	
 	//Height and random generator for height resetting
@@ -30,6 +48,12 @@ public class Pipe extends Tile{
 	//ArrayList of all pipe objects
 	private static ArrayList<Pipe> pipes = new ArrayList<Pipe>();
 	
+	/**
+	 * 
+	 * Method Name   : [Constructor]
+	 * Parameters    : position : int
+	 * Description   : Adds itself to List of all Pipes, then calls resetHeight().
+	 */
 	public Pipe(int position) {
 		super(position);
 		pipes.add(this);
@@ -38,9 +62,15 @@ public class Pipe extends Tile{
 		resetHeight();
 	}
 
+	/**
+	 * 
+	 * Method Name   : refreshTiles
+	 * Parameters    : none
+	 * Return Values : void
+	 * Description   : Refreshes tile size. Then calculates the gap, heightspacing, speed. Finally either creates all 
+	 * 				   new pipes or repositions old ones.
+	 */
 	public static void refreshTiles() {
-		//Refresh Tile width
-		refreshTileSize();
 		
 		//Adjust gap and heightSpacing for resized window
 		gap = (int) (Game.heightRatio()*150);
@@ -76,6 +106,13 @@ public class Pipe extends Tile{
 		}
 	}
 
+	/**
+	 * 
+	 * Method Name   : paintTile
+	 * Parameters    : g2d : Graphics2D
+	 * Return Values : none
+	 * Description   : Paints the pipes in their current position and then advances the position.
+	 */
 	@Override
 	public void paintTile(Graphics2D g2d){
 		//Reset pipe at right side
@@ -93,15 +130,36 @@ public class Pipe extends Tile{
 		g2d.drawImage(Game.getPipeBottom(), Board.roundMid(position), y - Game.getPipeTop().getHeight(null) + heightSpacing, null);
 		g2d.drawImage(Game.getPipeTop(), Board.roundMid(position), y + gap, null);
 		
+		//Dev mode outline
+		if(Board.devMode){
+			for(Shape s : getOutlines()){
+				g2d.draw(s);
+			}
+		}
+		
 		if(Board.current == Stage.PLAYING){
 			position -= speed * scaler;
 		}
 	}
 	
+	/**
+	 * 
+	 * Method Name   : resetHeight
+	 * Parameters    : none
+	 * Return Values : void
+	 * Description   : Resets the current pipe's height.
+	 */
 	private void resetHeight(){
-		y = gen.nextInt(Game.getDayBackground().getHeight(null) - Game.getPlatform().getHeight(null) - 2*heightSpacing - gap);
+		y = gen.nextInt(Game.getBackground().getHeight(null) - Game.getPlatform().getHeight(null) - 2*heightSpacing - gap);
 	}
 	
+	/**
+	 * 
+	 * Method Name   : getOutlines
+	 * Parameters    : none
+	 * Return Values : Rectangle2D[]
+	 * Description   : Generates and returns collision boxes for the current pipe.
+	 */
 	public Rectangle2D[] getOutlines(){
 		Rectangle2D top = new Rectangle(Board.roundMid(position),y - Game.getPipeTop().getHeight(null) + heightSpacing,
 				Game.getPipeTop().getWidth(null),Game.getPipeTop().getHeight(null));

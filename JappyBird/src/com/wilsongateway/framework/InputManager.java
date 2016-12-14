@@ -11,39 +11,35 @@ import java.awt.event.WindowStateListener;
 
 import com.wilsongateway.framework.Board.Stage;
 
+/**
+ * Name	 	: Nicholas Lane Wilson
+ * Class 	    : 1620 - 002
+ * Program # 	: 7
+ * Due Date  	: 12/7/2016
+ *
+ * Honor Pledge:  On my honor as a student of the University
+ *                of Nebraska at Omaha, I have neither given nor received
+ *                unauthorized help on this homework assignment.
+ *
+ * NAME: Nicholas Lane Wilson
+ * NUID: 350
+ * EMAIL: nlwilson@unomaha.edu
+ * 
+ * Partners:   NONE
+ *	
+ * Description: Acts a listener for key presses, mouse clicks, window resizes and window state changes.
+ */
 public class InputManager implements KeyListener, MouseListener, ComponentListener, WindowStateListener{
 
 	private boolean keyHeld = false;
-	
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		
-	}
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	/**
+	 * 
+	 * Method Name   : keyPressed
+	 * Parameters    : key : KeyEvent
+	 * Return Values : none
+	 * Description   : Calls upon the flap() method in each player that is bound to key.
+	 */
 	@Override
 	public void keyPressed(KeyEvent key) {
 		//Pause and Play functionality
@@ -71,22 +67,25 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 		}
 	}
 
+	/**
+	 * 
+	 * Method Name   : keyReleased
+	 * Parameters    : e : KeyEvent
+	 * Return Values : none
+	 * Description   : Sets keyHeld to false.
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		keyHeld = false;
 	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	@Override
-	public void componentHidden(ComponentEvent e) {}
-
-	@Override
-	public void componentMoved(ComponentEvent e) {
-		Game.refreshSettingsFrameLocation();
-	}
-
+	
+	/**
+	 * 
+	 * Method Name   : componentResized
+	 * Parameters    : e : ComponentEvent
+	 * Return Values : none
+	 * Description   : Sets the mainFrame to the minimum size and refreshes game objects.
+	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
 		if(Game.boardPanel.getHeight() < 0 || Game.boardPanel.getWidth() < 0){
@@ -98,13 +97,53 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 		Game.refreshScaledImages();
 		Board.resetGame();
 	}
+	
+	/**
+	 * 
+	 * Method Name   : windowStateChanged
+	 * Parameters    : w : WindowEvent
+	 * Return Values : none
+	 * Description   : Changes the settingsFrame's visibility.
+	 */
+	@Override
+	public void windowStateChanged(WindowEvent w) {
+		Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
+	}
+	
+	/**
+	 * 
+	 * Method Name   : componentMoved
+	 * Parameters    : e : ComponentEvent
+	 * Return Values : none
+	 * Description   : Refreshes the settingsFrame location.
+	 */
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		Game.refreshSettingsFrameLocation();
+	}
+
+	//Unimplemented super class methods
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {}
 
 	@Override
 	public void componentShown(ComponentEvent e) {}
 
 	@Override
-	public void windowStateChanged(WindowEvent arg0) {
-		Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
-	}
+	public void mouseClicked(MouseEvent arg0) {}
 
+	@Override
+	public void mouseEntered(MouseEvent arg0) {}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {}
 }

@@ -8,6 +8,24 @@ import javax.swing.JPanel;
 
 import com.wilsongateway.framework.Board.Stage;
 
+/**
+ * Name	 	: Nicholas Lane Wilson
+ * Class 	    : 1620 - 002
+ * Program # 	: 7
+ * Due Date  	: 12/7/2016
+ *
+ * Honor Pledge:  On my honor as a student of the University
+ *                of Nebraska at Omaha, I have neither given nor received
+ *                unauthorized help on this homework assignment.
+ *
+ * NAME: Nicholas Lane Wilson
+ * NUID: 350
+ * EMAIL: nlwilson@unomaha.edu
+ * 
+ * Partners:   NONE
+ *	
+ * Description: Represents the JPanel on which to paint the games graphics. Handles the rendering of each game component.
+ */
 @SuppressWarnings("serial")
 public class Board extends JPanel{
 	
@@ -20,18 +38,36 @@ public class Board extends JPanel{
 	
 	public static boolean devMode = false;
 	
+	/**
+	 * 
+	 * Method Name   : [Constructor]
+	 * Parameters    : none
+	 * Description   : Sets current mode to standby.
+	 */
 	public Board(){
 		current = Stage.STANDBY;
 	}
 	
+	/**
+	 * 
+	 * Method Name   : resetGame
+	 * Parameters    : none
+	 * Return Values : void
+	 * Description   : Sets current mode to standby and refreshes tiles.
+	 */
 	public static void resetGame(){
 		current = Stage.STANDBY;
+//		new FlashTransition(Stage.STANDBY, 60);
 		Tile.refreshTiles();
 	}
-	
+
 	/**
-	 * This paintComponent method serves as the global rendering switch for each game component.
-	 * The rendering of the game's components depend on the games 'current' Stage enum.
+	 * 
+	 * Method Name   : paintComponent
+	 * Parameters    : g : Graphics
+	 * Return Values : none
+	 * Description   : This paintComponent method serves as the global rendering switch for each game component. 
+	 * 				   The rendering of the game's components depend on the games 'current' Stage enum.           
 	 */
 	@Override
 	public void paintComponent(Graphics g){
@@ -73,6 +109,7 @@ public class Board extends JPanel{
 			}
 		}
 		
+		//Render transitions
 		if(!Transition.getTransitions().isEmpty()){
 			for(Transition t : Transition.getTransitions()){
 				t.runTransition(g2d);
@@ -81,10 +118,11 @@ public class Board extends JPanel{
 	}
 	
 	/**
-	 * Rounds to floor or ceiling depending if the number is
-	 * greater than the number + 0.5
-	 * @param x double to be rounded into int
-	 * @return rounded number 
+	 * 
+	 * Method Name   : roundMid
+	 * Parameters    : x : double
+	 * Return Values : int
+	 * Description   : Rounds a double to int according to whether the double is < *.5 or > *.5
 	 */
 	public static int roundMid(double x){
 		if(x < Math.floor(x) + 0.5){
