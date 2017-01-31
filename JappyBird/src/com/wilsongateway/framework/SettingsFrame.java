@@ -67,7 +67,7 @@ public class SettingsFrame extends JFrame{
 		add(startBtn);
 		
 		//Instructions
-		add(new JLabel("Press space to start"));
+		add(new JLabel("Press h to hide"));
 		add(new JLabel("Press esc to pause"));
 		
 		//Title + Panel

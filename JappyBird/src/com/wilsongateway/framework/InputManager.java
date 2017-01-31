@@ -49,21 +49,24 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 			}else{
 				Board.current = Stage.PLAYING;
 			}
-		}
-		
-		if(!keyHeld){
-			//Check player bindings
-			for(Player p : Player.getPlayers()){
-				if(key.getKeyCode() == p.getKeyBind()){
-					p.flap();
+		}else if(key.getKeyCode() == KeyEvent.VK_H){
+			Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
+			Game.mainFrame.requestFocus();
+		}else{
+			if(!keyHeld){
+				//Check player bindings
+				for(Player p : Player.getPlayers()){
+					if(key.getKeyCode() == p.getKeyBind()){
+						p.flap();
+					}
 				}
 			}
-		}
-		keyHeld = true;
-		
-		//Begin game on standby
-		if(Board.current == Stage.STANDBY){
-			Board.current = Stage.PLAYING;
+			keyHeld = true;
+			
+			//Begin game on standby
+			if(Board.current == Stage.STANDBY){
+				Board.current = Stage.PLAYING;
+			}
 		}
 	}
 
