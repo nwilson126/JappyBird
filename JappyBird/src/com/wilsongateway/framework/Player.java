@@ -108,8 +108,11 @@ public class Player {
 				}
 			}
 		}else{
+			int lastPoints = points;
+			
 			Game.settingsFrame.refreshMaxScoreLabel();
 			Board.resetGame();
+			Board.recordScore(lastPoints);
 		}
 		
 		//Render images

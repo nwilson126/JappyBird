@@ -136,8 +136,8 @@ public class Game {
 		//Load fonts
 		try {
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/FlappyBirdy.ttf")));
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/04B_19__.TTF")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("resources/FlappyBirdy.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, getClass().getClassLoader().getResourceAsStream("resources/04B_19__.TTF")));
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 			return;

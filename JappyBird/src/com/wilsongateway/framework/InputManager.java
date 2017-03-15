@@ -145,8 +145,24 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	public void mouseExited(MouseEvent arg0) {}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {}
+	public void mousePressed(MouseEvent arg0) {
+		//Pause and Play functionality
+		if(!keyHeld){
+			//Check player bindings
+			for(Player p : Player.getPlayers()){
+				p.flap();
+			}
+		}
+		keyHeld = true;
+		
+		//Begin game on standby
+		if(Board.current == Stage.STANDBY){
+			Board.current = Stage.PLAYING;
+		}
+	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {}
+	public void mouseReleased(MouseEvent arg0) {
+		keyHeld = false;
+	}
 }

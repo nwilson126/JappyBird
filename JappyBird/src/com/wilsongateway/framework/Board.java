@@ -3,7 +3,9 @@ package com.wilsongateway.framework;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.wilsongateway.framework.Board.Stage;
@@ -33,8 +35,9 @@ public class Board extends JPanel{
 	public static double backgroundScaler = 0.5;
 	public static boolean movingBackground = true;
 	
-	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY, DEATHMENU}
+	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY}
 	public static Stage current;
+	private static LinkedList<Score> highscores = new LinkedList<Score>();
 	
 	public static boolean devMode = false;
 	
@@ -57,7 +60,6 @@ public class Board extends JPanel{
 	 */
 	public static void resetGame(){
 		current = Stage.STANDBY;
-//		new FlashTransition(Stage.STANDBY, 60);
 		Tile.refreshTiles();
 	}
 
@@ -73,7 +75,7 @@ public class Board extends JPanel{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		//Paint background tiles
 		for(Background b : Background.getBackgrounds()){
 			b.paintTile(g2d);
@@ -94,6 +96,14 @@ public class Board extends JPanel{
 		//Render logo if in standby
 		if(current == Stage.STANDBY && Game.getJappyLogo() != null){
 			g2d.drawImage(Game.getJappyLogo(), Game.boardPanel.getWidth()/2 - Game.getJappyLogo().getWidth(null)/2, Game.boardPanel.getHeight()/4, null);
+		}
+		
+		//Render highscores if in standby
+		if(current == Stage.STANDBY && Game.dayBackground != null){
+			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*25)));
+			for(int i = 0; i < highscores.size(); i++){
+				g2d.drawString((i+1) + ". " + highscores.get(i).getName() + ": " + highscores.get(i).getValue(), 10, (int) ((i+1)*(Game.heightRatio()*25)));
+			}
 		}
 		
 		//Render score if playing
@@ -117,6 +127,34 @@ public class Board extends JPanel{
 		}
 	}
 	
+	static void recordScore(int points){
+		//Check if highscores is empty or if the current points are eligible
+		if(highscores.size() < 5 || points > highscores.getLast().getValue()){
+			String name;
+			//Max char cap
+			do{
+				name = JOptionPane.showInputDialog(Game.boardPanel, "Enter your name (10 chars.):");
+			}while(name == null || name.length() > 10);
+			
+			//Find where the points belong 
+			int i;
+			for(i = 0; i < highscores.size(); i++){
+				if(points > highscores.get(i).getValue()){
+					System.out.println("added");
+					break;
+				}
+			}
+			
+			//Insert the new record
+			highscores.add(i, new Score(points, name));
+			
+			//Truncate
+			if(highscores.size() > 5){
+				highscores.removeLast();
+			}
+		}
+	}
+
 	/**
 	 * 
 	 * Method Name   : roundMid

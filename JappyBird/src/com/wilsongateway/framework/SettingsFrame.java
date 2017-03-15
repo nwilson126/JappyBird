@@ -154,7 +154,7 @@ public class SettingsFrame extends JFrame{
 		add(fpsLabel);
 		
 		//JFrame configuration
-		setVisible(true);
+		setVisible(false);
 		setSize(startBtn.getWidth()*2, 300);
 		this.addFocusListener(new FocusListener(){
 
