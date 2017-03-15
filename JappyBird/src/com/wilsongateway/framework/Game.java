@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -85,6 +87,15 @@ public class Game {
 		
 		boardPanel = new Board();
 		
+		if(SaveManager.saveFileExists()){
+			System.out.println("file exists");
+			SaveManager.loadHighscores();
+			System.out.println(Board.getHighscores());
+		}else{
+			System.out.println("file doesn't exist");
+			SaveManager.saveHighscores(Board.getHighscores());
+		}
+		
 		mainFrame = new JFrame("JappyBird");
 		mainFrame.setSize(width, height);
 		mainFrame.setMinimumSize(new Dimension(100,100));
@@ -110,6 +121,29 @@ public class Game {
 		mainFrame.addKeyListener(manager);
 		mainFrame.addComponentListener(manager);
 		mainFrame.addWindowStateListener(manager);
+		mainFrame.addWindowListener(new WindowListener(){
+			@Override
+			public void windowClosing(WindowEvent e) {
+				//Save on close
+				if(SaveManager.saveHighscores(Board.getHighscores())){
+					System.out.println("Save successful");
+				}
+				System.exit(0);
+			}
+			//Unused
+			@Override
+			public void windowActivated(WindowEvent e) {}
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			@Override
+			public void windowOpened(WindowEvent e) {}
+		});
 		
 		//Create main player and set initial scene
 		player = new Player();

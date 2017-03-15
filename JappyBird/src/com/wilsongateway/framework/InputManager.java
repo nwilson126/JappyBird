@@ -54,7 +54,7 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 			}else if(key.getKeyCode() == KeyEvent.VK_H){
 				Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
 				Game.mainFrame.requestFocus();
-			}else{
+			}else if(key.getKeyCode() == KeyEvent.VK_SPACE){
 				if(!keyHeld){
 					//Check player bindings
 					for(Player p : Player.getPlayers()){
@@ -69,6 +69,18 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 				if(Board.current == Stage.STANDBY){
 					Board.current = Stage.PLAYING;
 				}
+			}
+		}
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if(Board.current == Stage.DEATHMENU){
+			if(Board.getNameInput().length() < 10 && e.getKeyChar()    != '\n'){
+				Board.appendToNameInput(e.getKeyChar());
+			}else{
+				Board.recordScore();
+				Board.current = Stage.STANDBY;
 			}
 		}
 	}
@@ -126,18 +138,6 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	@Override
 	public void componentMoved(ComponentEvent e) {
 		Game.refreshSettingsFrameLocation();
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		if(Board.current == Stage.DEATHMENU){
-			if(Board.getNameInput().length() < 10 && e.getKeyCode() != KeyEvent.VK_ENTER){
-				Board.appendToNameInput(e.getKeyChar());
-			}else{
-				Board.recordScore();
-				Board.current = Stage.STANDBY;
-			}
-		}
 	}
 	
 	@Override

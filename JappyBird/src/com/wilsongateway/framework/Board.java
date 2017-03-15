@@ -1,6 +1,7 @@
 package com.wilsongateway.framework;
 
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
@@ -38,7 +39,7 @@ public class Board extends JPanel{
 	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY, DEATHMENU}
 	public static Stage current;
 	
-	private static LinkedList<Score> highscores = new LinkedList<Score>();
+	private static volatile LinkedList<Score> highscores = new LinkedList<Score>();
 	public static int lastScore = 0;
 	private volatile static String nameInput = "";
 	
@@ -117,8 +118,22 @@ public class Board extends JPanel{
 		
 		//Render name input if in Deathmenu
 		if(current == Stage.DEATHMENU){
+			//Input line _____
+			String nameOutput = nameInput;
+			for(int i = nameOutput.length(); i < 10; i++){
+				nameOutput += "_";
+			}
+			
+			//Flappy Font
 			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*32)));
-			g2d.drawString(nameInput, Game.boardPanel.getWidth()/2, (Game.boardPanel.getHeight()/10)*2);
+			
+			//Enter name label
+			int stringWidth = g2d.getFontMetrics().stringWidth("Enter Name:");
+			g2d.drawString("Enter Name:", Game.boardPanel.getWidth()/2 - (stringWidth/2), (Game.boardPanel.getHeight()/10)*2);
+			
+			//Current Text
+			stringWidth = g2d.getFontMetrics().stringWidth(nameOutput);
+			g2d.drawString(nameOutput, Game.boardPanel.getWidth()/2 - (stringWidth/2), (Game.boardPanel.getHeight()/10)*3);
 		}
 		
 		//Render Player if not in main menu
@@ -160,6 +175,14 @@ public class Board extends JPanel{
 	
 	static boolean eligibleHighscore(){
 		return highscores.size() < 5 || lastScore > highscores.getLast().getValue();
+	}
+	
+	static LinkedList<Score> getHighscores(){
+		return highscores;
+	}
+	
+	static void setHighscores(LinkedList<Score> scores){
+		highscores = scores;
 	}
 
 	/**

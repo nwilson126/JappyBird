@@ -1,6 +1,11 @@
 package com.wilsongateway.framework;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable{
+
+	private static final long serialVersionUID = 3064796304425071240L;
+	
 	private int value;
 	private String name;
 	
