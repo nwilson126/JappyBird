@@ -35,9 +35,12 @@ public class Board extends JPanel{
 	public static double backgroundScaler = 0.5;
 	public static boolean movingBackground = true;
 	
-	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY}
+	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY, DEATHMENU}
 	public static Stage current;
+	
 	private static LinkedList<Score> highscores = new LinkedList<Score>();
+	public static int lastScore = 0;
+	private volatile static String nameInput = "";
 	
 	public static boolean devMode = false;
 	
@@ -58,8 +61,8 @@ public class Board extends JPanel{
 	 * Return Values : void
 	 * Description   : Sets current mode to standby and refreshes tiles.
 	 */
-	public static void resetGame(){
-		current = Stage.STANDBY;
+	public static void resetGame(Stage goTo){
+		current = goTo;
 		Tile.refreshTiles();
 	}
 
@@ -82,7 +85,7 @@ public class Board extends JPanel{
 		}
 		
 		//Render Pipes if not in main menu
-		if(current != Stage.MAINMENU){
+		if(current == Stage.PAUSED || current == Stage.PLAYING || current == Stage.STANDBY){
 			for(Pipe p : Pipe.getPipes()){
 				p.paintTile(g2d);
 			}
@@ -112,8 +115,14 @@ public class Board extends JPanel{
 			g2d.drawString(Game.player.getPoints() + "", Game.boardPanel.getWidth()/2, Game.boardPanel.getHeight()/10);
 		}
 		
+		//Render name input if in Deathmenu
+		if(current == Stage.DEATHMENU){
+			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*32)));
+			g2d.drawString(nameInput, Game.boardPanel.getWidth()/2, (Game.boardPanel.getHeight()/10)*2);
+		}
+		
 		//Render Player if not in main menu
-		if(current != Stage.MAINMENU){
+		if(current == Stage.PAUSED || current == Stage.PLAYING || current == Stage.STANDBY || current == Stage.DEATHMENU){
 			for(Player p : Player.getPlayers()){
 				p.paintPlayer(g2d);
 			}
@@ -127,32 +136,30 @@ public class Board extends JPanel{
 		}
 	}
 	
-	static void recordScore(int points){
-		//Check if highscores is empty or if the current points are eligible
-		if(highscores.size() < 5 || points > highscores.getLast().getValue()){
-			String name;
-			//Max char cap
-			do{
-				name = JOptionPane.showInputDialog(Game.boardPanel, "Enter your name (10 chars.):");
-			}while(name == null || name.length() > 10);
-			
-			//Find where the points belong 
-			int i;
-			for(i = 0; i < highscores.size(); i++){
-				if(points > highscores.get(i).getValue()){
-					System.out.println("added");
-					break;
-				}
-			}
-			
-			//Insert the new record
-			highscores.add(i, new Score(points, name));
-			
-			//Truncate
-			if(highscores.size() > 5){
-				highscores.removeLast();
+	static void recordScore(){
+		//Find where the points belong 
+		int i;
+		for(i = 0; i < highscores.size(); i++){
+			if(lastScore > highscores.get(i).getValue()){
+				System.out.println("added");
+				break;
 			}
 		}
+		
+		//Insert the new record
+		highscores.add(i, new Score(lastScore, nameInput));
+		
+		//Truncate
+		if(highscores.size() > 5){
+			highscores.removeLast();
+		}
+		
+		//Clear last name
+		nameInput = "";
+	}
+	
+	static boolean eligibleHighscore(){
+		return highscores.size() < 5 || lastScore > highscores.getLast().getValue();
 	}
 
 	/**
@@ -168,5 +175,13 @@ public class Board extends JPanel{
 		}else{
 			return (int)Math.ceil(x);
 		}
+	}
+	
+	public static String getNameInput(){
+		return nameInput;
+	}
+	
+	public static void appendToNameInput(char c){
+		nameInput += c;
 	}
 }

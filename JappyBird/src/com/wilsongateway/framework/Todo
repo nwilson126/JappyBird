@@ -15,3 +15,4 @@ boot screen
 loading screen
 resizing screen
 screen management system(MVC Cleanup/refactoring)
+remove maxscorelabel

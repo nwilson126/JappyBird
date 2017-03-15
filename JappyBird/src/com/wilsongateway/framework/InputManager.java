@@ -42,30 +42,33 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	 */
 	@Override
 	public void keyPressed(KeyEvent key) {
-		//Pause and Play functionality
-		if(key.getKeyCode() == KeyEvent.VK_ESCAPE){
-			if(Board.current == Stage.PLAYING){
-				Board.current = Stage.PAUSED;
+		if(Board.current == Stage.PAUSED || Board.current == Stage.PLAYING || Board.current == Stage.STANDBY){
+			
+			//Pause and Play functionality
+			if(key.getKeyCode() == KeyEvent.VK_ESCAPE){
+				if(Board.current == Stage.PLAYING){
+					Board.current = Stage.PAUSED;
+				}else{
+					Board.current = Stage.PLAYING;
+				}
+			}else if(key.getKeyCode() == KeyEvent.VK_H){
+				Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
+				Game.mainFrame.requestFocus();
 			}else{
-				Board.current = Stage.PLAYING;
-			}
-		}else if(key.getKeyCode() == KeyEvent.VK_H){
-			Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
-			Game.mainFrame.requestFocus();
-		}else{
-			if(!keyHeld){
-				//Check player bindings
-				for(Player p : Player.getPlayers()){
-					if(key.getKeyCode() == p.getKeyBind()){
-						p.flap();
+				if(!keyHeld){
+					//Check player bindings
+					for(Player p : Player.getPlayers()){
+						if(key.getKeyCode() == p.getKeyBind()){
+							p.flap();
+						}
 					}
 				}
-			}
-			keyHeld = true;
-			
-			//Begin game on standby
-			if(Board.current == Stage.STANDBY){
-				Board.current = Stage.PLAYING;
+				keyHeld = true;
+				
+				//Begin game on standby
+				if(Board.current == Stage.STANDBY){
+					Board.current = Stage.PLAYING;
+				}
 			}
 		}
 	}
@@ -98,7 +101,7 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 		Game.refreshSettingsFrameLocation();
 		
 		Game.refreshScaledImages();
-		Board.resetGame();
+		Board.resetGame(Board.current);
 	}
 	
 	/**
@@ -125,25 +128,18 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 		Game.refreshSettingsFrameLocation();
 	}
 
-	//Unimplemented super class methods
 	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	@Override
-	public void componentHidden(ComponentEvent e) {}
-
-	@Override
-	public void componentShown(ComponentEvent e) {}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {}
-
+	public void keyTyped(KeyEvent e) {
+		if(Board.current == Stage.DEATHMENU){
+			if(Board.getNameInput().length() < 10 && e.getKeyCode() != KeyEvent.VK_ENTER){
+				Board.appendToNameInput(e.getKeyChar());
+			}else{
+				Board.recordScore();
+				Board.current = Stage.STANDBY;
+			}
+		}
+	}
+	
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		//Pause and Play functionality
@@ -165,4 +161,19 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	public void mouseReleased(MouseEvent arg0) {
 		keyHeld = false;
 	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {}
+
+	@Override
+	public void componentShown(ComponentEvent e) {}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {}
 }

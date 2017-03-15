@@ -108,11 +108,8 @@ public class Player {
 				}
 			}
 		}else{
-			int lastPoints = points;
-			
-			Game.settingsFrame.refreshMaxScoreLabel();
-			Board.resetGame();
-			Board.recordScore(lastPoints);
+			Board.lastScore = points;
+			Board.resetGame(Board.eligibleHighscore() ? Stage.DEATHMENU : Stage.STANDBY);
 		}
 		
 		//Render images

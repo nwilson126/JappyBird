@@ -15,6 +15,7 @@ import javax.swing.JRootPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import com.wilsongateway.framework.Board.Stage;
 import com.wilsongateway.framework.Game.Time;
 
 /**
@@ -61,7 +62,7 @@ public class SettingsFrame extends JFrame{
 		//Resets all game pieces
 		JButton startBtn = new JButton("Reset");
 		startBtn.addActionListener(e -> {
-			Board.resetGame();
+			Board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		add(startBtn);
@@ -82,7 +83,7 @@ public class SettingsFrame extends JFrame{
 		((JSpinner.DefaultEditor)speedSpinner.getEditor()).getTextField().setEditable(false);
 		speedSpinner.addChangeListener(e -> {
 			Board.speedScaler = (double)speedSpinner.getValue();
-			Board.resetGame();
+			Board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		speedSpinner.addFocusListener(new FocusListener(){
@@ -110,7 +111,7 @@ public class SettingsFrame extends JFrame{
 		((JSpinner.DefaultEditor)spacingSpinner.getEditor()).getTextField().setEditable(false);
 		spacingSpinner.addChangeListener(e -> {
 			Pipe.spacing = (int)spacingSpinner.getValue();
-			Board.resetGame();
+			Board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		spacingPanel.add(spacingSpinner);
@@ -128,7 +129,7 @@ public class SettingsFrame extends JFrame{
 		timeSelector.setSelectedItem(Time.DAY);
 		timeSelector.addActionListener(e -> {
 			Game.currentTime = (Time) timeSelector.getSelectedItem();
-			Board.resetGame();
+			Board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		timePanel.add(timeSelector);
@@ -144,7 +145,7 @@ public class SettingsFrame extends JFrame{
 		devCheckBox.setBackground(new Color(222, 216, 149));
 		devCheckBox.addActionListener(e -> {
 			Board.devMode = devCheckBox.isSelected();
-			Board.resetGame();
+			Board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		add(devCheckBox);
