@@ -1,8 +1,10 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.objects;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import com.wilsongateway.framework.Board;
+import com.wilsongateway.framework.Game;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -25,8 +27,6 @@ import com.wilsongateway.framework.Board.Stage;
  * 				Handles the moving and rendering of the platform.
  */
 public class Platform extends Tile{
-	
-	private static double speed;
 
 	protected static ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
@@ -52,13 +52,13 @@ public class Platform extends Tile{
 		//Check if it is a new board
 		if(platforms.size() == 0){
 			//Creating all new Tiles, adds width + tileWidth for overlap
-			for(int position = 0; position < Game.boardPanel.getWidth() + tileWidth; position += tileWidth){
+			for(int position = 0; position < Game.board.getWidth() + tileWidth; position += tileWidth){
 				new Platform(position);
 			}
 		}else{
 			//Re-assign the old Tiles
 			int i = 0;
-			for(int position = 0; position < Game.boardPanel.getWidth() + tileWidth; position += tileWidth){
+			for(int position = 0; position < Game.board.getWidth() + tileWidth; position += tileWidth){
 				if(i < platforms.size()){
 					platforms.get(i).setPosition(position);
 				}else{
@@ -83,20 +83,23 @@ public class Platform extends Tile{
 	 */
 	@Override
 	public void paintTile(Graphics2D g2d){
+		g2d.drawImage(Game.getPlatform(), Board.roundMid(position), Game.board.getHeight()-platformHeight, null);
+		
+		//Dev mode outline
+		if(Game.board.devMode){
+			g2d.drawLine(Board.roundMid(position), Game.board.getHeight()-platformHeight, Board.roundMid(position), Game.board.getHeight());
+		}
+	}
+	
+	@Override
+	public void moveTile(){
 		if(position + tileWidth < 0){
 			position = (platforms.size()-1) * tileWidth;
 		}
 		
-		g2d.drawImage(Game.getPlatform(), Board.roundMid(position), Game.boardPanel.getHeight()-platformHeight, null);
-		
-		//Dev mode outline
-		if(Board.devMode){
-			g2d.drawLine(Board.roundMid(position), Game.boardPanel.getHeight()-platformHeight, Board.roundMid(position), Game.boardPanel.getHeight());
-		}
-		
 		//Controls movement of game object with respect to the 'current' Stage enum.
-		if(Board.current == Stage.PLAYING || Board.current == Stage.MAINMENU){
-			position -= Game.heightRatio()*Board.speedScaler;
+		if(Game.board.current == Stage.PLAYING || Game.board.current == Stage.MAINMENU){
+			position -= Game.heightRatio()*Game.board.speedScaler*Game.tpsRatio();
 		}
 	}
 	

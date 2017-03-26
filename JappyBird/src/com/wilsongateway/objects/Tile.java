@@ -1,7 +1,9 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.objects;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+
+import com.wilsongateway.framework.Game;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -30,6 +32,7 @@ public abstract class Tile {
 	public static int tileWidth = 0;
 	public static int platformHeight = 0;
 	public static int pipeSpacing = 0;
+	public static int overlap = 3;
 	
 	//ArrayList of all Tiles
 	private static ArrayList<Tile> tiles = new ArrayList<Tile>();
@@ -56,22 +59,29 @@ public abstract class Tile {
 	
 	/**
 	 * 
+	 * Method Name   : moveTile
+	 * Parameters    : none
+	 * Return Values : void
+	 * Description   : Moving of current tile to be implemented in sub classes.
+	 */
+	public abstract void moveTile();
+	
+	/**
+	 * 
 	 * Method Name   : refreshTiles
 	 * Parameters    : none
 	 * Return Values : void
 	 * Description   : Resets the tileWidth, platformHeight, and pipeSpacing. Calls upon each sub classes refresh method.
 	 */
 	public static void refreshTiles(){
-		tileWidth = Game.getBackground().getWidth(null)-2;
+		tileWidth = Game.getBackground().getWidth(null) - overlap;
 		platformHeight = Game.getPlatform().getHeight(null);
 		pipeSpacing = Pipe.spacing * Game.getPipeTop().getWidth(null);
 		
 		Background.refreshTiles();
 		Platform.refreshTiles();
 		Pipe.refreshTiles();
-		for(Player p : Player.getPlayers()){
-			p.resetPlayer();
-		}
+		Game.player.resetPlayer();
 	}
 	
 	/**

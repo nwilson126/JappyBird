@@ -1,7 +1,7 @@
 package com.wilsongateway.framework;
 
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.wilsongateway.framework.Board.Stage;
 
@@ -31,7 +31,7 @@ public abstract class Transition {
 	protected int length;
 	
 	//Global variables
-	private static ArrayList<Transition> transitions = new ArrayList<Transition>();
+	private static volatile CopyOnWriteArrayList<Transition> transitions = new CopyOnWriteArrayList<Transition>();
 	
 	/**
 	 * The Transition class defines any graphical transition that takes place according to the Game's tick and moves the
@@ -47,7 +47,7 @@ public abstract class Transition {
 	 * Parameters    : destinationStage : Stage, length : int
 	 * Description   : Initializes variables and adds transition to all transitions.
 	 */
-	Transition(Stage destinationStage, int length){
+	protected Transition(Stage destinationStage, int length){
 		this.destinationStage = destinationStage;
 		this.length = length;
 		transitions.add(this);
@@ -60,13 +60,17 @@ public abstract class Transition {
 	 * Return Values : void
 	 * Description   : If the transition time has expired, the transition is removed, else it is played.
 	 */
-	public void runTransition(Graphics2D g2d){
+	public void runTransition(){
 		if(transitionTick < length){
-			paintTransition(g2d);
+			moveTransition();
 			transitionTick++;
 		}else{
 			transitions.remove(this);
 		}
+	}
+		
+	public static boolean noneActive(){
+		return !(transitions.size() > 0);
 	}
 	
 	/**
@@ -76,8 +80,10 @@ public abstract class Transition {
 	 * Return Values : void
 	 * Description   : To be implemented in subclasses for rendering.
 	 */
-	protected abstract void paintTransition(Graphics2D g2d);
+	public abstract void paintTransition(Graphics2D g2d);
+	
+	protected abstract void moveTransition();
 	
 	//BoilerPlate getters
-	public static ArrayList<Transition> getTransitions(){return transitions;}
+	public static CopyOnWriteArrayList<Transition> getTransitions(){return transitions;}
 }

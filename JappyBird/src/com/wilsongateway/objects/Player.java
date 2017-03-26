@@ -1,14 +1,12 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.objects;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-
+import com.wilsongateway.animations.FlashTransition;
+import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.Transition;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -39,7 +37,6 @@ public class Player {
 	private double theta;
 	public final static double accCutOff = 0.3;
 	public final static double thetaCutOff = 1;
-	private int binding = KeyEvent.VK_SPACE;
 	
 	//Collision Border
 	private Shape outline;
@@ -47,8 +44,7 @@ public class Player {
 	//Status
 	private boolean alive;
 	private int points = 0;
-	
-	private static ArrayList<Player> players = new ArrayList<Player>();
+	private double flapState = 0;
 	
 	/**
 	 * 
@@ -56,9 +52,8 @@ public class Player {
 	 * Parameters    : none
 	 * Description   : Resets the players position and adds this to players.
 	 */
-	Player(){
-		resetPlayer();
-		players.add(this);
+	public Player(){
+		alive = true;
 	}
 	
 	/**
@@ -70,7 +65,7 @@ public class Player {
 	 */
 	public void resetPlayer(){
 		y = Game.dayBackground.getHeight(null)/2;
-		x = Game.boardPanel.getWidth()/2 - Game.getFlappyUp().getWidth(null)/2;
+		x = Game.board.getWidth()/2 - Game.getFlappyUp().getWidth(null)/2;
 		velY = 0;
 		accY = 0;
 		theta = 0;
@@ -87,40 +82,58 @@ public class Player {
 	 * Description   : Renders the current player and adjusts position variables.
 	 */
 	public void paintPlayer(Graphics2D g2d){
+		//Render images
+		g2d.rotate(theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);
+		g2d.drawImage(Game.getFlappy(flapState), x, (int) (Game.heightRatio()*y), null);
+		g2d.rotate(-1*theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);
+
+		
+		checkCollision();
+		
+		//Dev Render Border
+		if(Game.board.devMode){
+			g2d.draw(outline);
+		}
+	}
+	
+	public void movePlayer(){
 		//Status check
 		if(alive){
-			if(Board.current == Stage.PLAYING){
+			if(Game.board.current == Stage.PLAYING){
 				//Adjust position variables
-				velY += accY;
-				y += velY;
+				velY += accY * Game.tpsRatio();
+				y += velY * Game.tpsRatio();
 				if(y < 0){
 					y = 0;
 				}
 				
 				//Deceleration
 				if(accY < accCutOff){
-					accY += .05;
+					accY += .05 * Game.tpsRatio();
 				}
 				
 				//Falling rotation
 				if(theta < thetaCutOff){
-					theta += 0.02;
+					theta += 0.02 * Game.tpsRatio();
 				}
 			}
 		}else{
-			Board.lastScore = points;
-			Board.resetGame(Board.eligibleHighscore() ? Stage.DEATHMENU : Stage.STANDBY);
+			Game.board.lastScore = points;
+			
+			if(Transition.noneActive()){
+				new FlashTransition(Game.board.eligibleHighscore() ? Stage.DEATHMENU : Stage.STANDBY, 25);
+			}
+			
+			x -= Game.heightRatio()*Game.board.speedScaler*Game.tpsRatio();
 		}
-		
-		//Render images
-		g2d.rotate(theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);
-		g2d.drawImage(Game.getFlappy(), x, (int) (Game.heightRatio()*y), null);
 		
 		checkCollision();
 		
-		//Dev Render Border
-		if(Board.devMode){
-			g2d.draw(outline);
+		//Flap wings
+		if(flapState > 40){
+			flapState = 0;
+		}else{
+			flapState += 0.2 * Game.tpsRatio();
 		}
 	}
 	
@@ -132,7 +145,7 @@ public class Player {
 	 * Description   : Adjusts position variables to represent an upwards acceleration.
 	 */
 	public void flap(){
-		if(Board.current == Stage.PLAYING){
+		if(Game.board.current == Stage.PLAYING){
 			accY = 0;
 			velY = -4;
 			theta = -0.5;
@@ -155,7 +168,7 @@ public class Player {
 		//Refresh outline
 		outline = new Ellipse2D.Double(x, (int) (Game.heightRatio()*y), Game.getFlappyUp().getWidth(null), Game.getFlappyUp().getHeight(null));
 		
-		for(Pipe pipe : Pipe.getPipes()){
+		for(Pipe pipe : Pipe.getPipes()){//TODO fix concurrent mod exception
 			for(Rectangle2D s : pipe.getOutlines()){
 				if(outline.intersects(s)){
 					alive = false;
@@ -176,9 +189,6 @@ public class Player {
 	}
 
 	//Boilerplate
-	public static ArrayList<Player> getPlayers() {return players;}
-	public int getKeyBind(){return binding;}
-	public void setKeyBind(int binding){this.binding = binding;}
 	public boolean isAlive(){return alive;}
 	public Shape getOutline(){return outline;}
 	public int getX(){return x;}

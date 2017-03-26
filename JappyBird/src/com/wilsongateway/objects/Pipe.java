@@ -1,4 +1,4 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.objects;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -6,7 +6,10 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.wilsongateway.framework.Board;
+import com.wilsongateway.framework.Game;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -38,7 +41,6 @@ public class Pipe extends Tile{
 	private static int heightSpacing = 0;
 	
 	//Pipe placement variables
-	protected static double scaler = 1;
 	protected static double speed;
 	public static int spacing = 3;
 	
@@ -46,7 +48,7 @@ public class Pipe extends Tile{
 	boolean scored = false;
 
 	//ArrayList of all pipe objects
-	private static ArrayList<Pipe> pipes = new ArrayList<Pipe>();
+	private static CopyOnWriteArrayList<Pipe> pipes = new CopyOnWriteArrayList<Pipe>();
 	
 	/**
 	 * 
@@ -70,25 +72,25 @@ public class Pipe extends Tile{
 	 * Description   : Refreshes tile size. Then calculates the gap, heightspacing, speed. Finally either creates all 
 	 * 				   new pipes or repositions old ones.
 	 */
-	public static void refreshTiles() {
+	public static void refreshTiles() {//TODO fix
 		
 		//Adjust gap and heightSpacing for resized window
 		gap = (int) (Game.heightRatio()*150);
 		heightSpacing = (int) (Game.heightRatio()*50);
 		
 		//Adjust speed for resizing window
-		speed = Game.heightRatio()*Board.speedScaler;
+		speed = Game.heightRatio()*Game.board.speedScaler;
 		
 		//Check if it is a new board
 		if(pipes.size() == 0){
 			//Creating all new Tiles, adds width + tileWidth for overlap
-			for(int position = 0; position < Game.boardPanel.getWidth() + pipeSpacing; position += pipeSpacing){
+			for(int position = 0; position < Game.board.getWidth() + pipeSpacing; position += pipeSpacing){
 				new Pipe(position + Game.width/2 + gap);
 			}
 		}else{
 			//Re-assign the old Tiles
 			int i = 0;
-			for(int position = 0; position < Game.boardPanel.getWidth() + pipeSpacing; position += pipeSpacing){
+			for(int position = 0; position < Game.board.getWidth() + pipeSpacing; position += pipeSpacing){
 				if(i < pipes.size()){
 					pipes.get(i).setPosition(position + Game.width/2 + gap);
 					pipes.get(i).resetHeight();
@@ -115,6 +117,20 @@ public class Pipe extends Tile{
 	 */
 	@Override
 	public void paintTile(Graphics2D g2d){
+		g2d.drawImage(Game.getPipeBottom(), Board.roundMid(position), y - Game.getPipeTop().getHeight(null) + heightSpacing, null);
+		g2d.drawImage(Game.getPipeTop(), Board.roundMid(position), y + gap, null);
+		
+		//Dev mode outline
+		if(Game.board.devMode){
+			for(Shape s : getOutlines()){
+				g2d.draw(s);
+			}
+		}
+	}
+	
+
+	@Override
+	public void moveTile(){
 		//Reset pipe at right side
 		if(position + pipeSpacing < 0){
 			position = (pipes.size()-1) * pipeSpacing;
@@ -127,18 +143,8 @@ public class Pipe extends Tile{
 			Game.player.addPoint();
 		}
 		
-		g2d.drawImage(Game.getPipeBottom(), Board.roundMid(position), y - Game.getPipeTop().getHeight(null) + heightSpacing, null);
-		g2d.drawImage(Game.getPipeTop(), Board.roundMid(position), y + gap, null);
-		
-		//Dev mode outline
-		if(Board.devMode){
-			for(Shape s : getOutlines()){
-				g2d.draw(s);
-			}
-		}
-		
-		if(Board.current == Stage.PLAYING){
-			position -= speed * scaler;
+		if(Game.board.current == Stage.PLAYING){
+			position -= speed * Game.tpsRatio();
 		}
 	}
 	
@@ -170,7 +176,7 @@ public class Pipe extends Tile{
 	}
 	
 	//Boilerplate
-	public static ArrayList<Pipe> getPipes(){return pipes;}
+	public static CopyOnWriteArrayList<Pipe> getPipes(){return pipes;}
 	public int getGapTopY(){return y;}
 	public int getGapBottomY(){return y + gap;}
 	public void setScored(boolean value){scored = value;}

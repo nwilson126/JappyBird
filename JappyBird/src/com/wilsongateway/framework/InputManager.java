@@ -32,6 +32,7 @@ import com.wilsongateway.framework.Board.Stage;
 public class InputManager implements KeyListener, MouseListener, ComponentListener, WindowStateListener{
 
 	private boolean keyHeld = false;
+	private boolean displaySettings = false;
 
 	/**
 	 * 
@@ -42,32 +43,30 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	 */
 	@Override
 	public void keyPressed(KeyEvent key) {
-		if(Board.current == Stage.PAUSED || Board.current == Stage.PLAYING || Board.current == Stage.STANDBY){
+		if(Game.board.current == Stage.PAUSED || Game.board.current == Stage.PLAYING || Game.board.current == Stage.STANDBY){
 			
 			//Pause and Play functionality
 			if(key.getKeyCode() == KeyEvent.VK_ESCAPE){
-				if(Board.current == Stage.PLAYING){
-					Board.current = Stage.PAUSED;
+				if(Game.board.current == Stage.PLAYING){
+					Game.board.current = Stage.PAUSED;
 				}else{
-					Board.current = Stage.PLAYING;
+					Game.board.current = Stage.PLAYING;
 				}
 			}else if(key.getKeyCode() == KeyEvent.VK_H){
-				Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
+				displaySettings = !displaySettings;
+				Game.settingsFrame.setVisible(displaySettings);
+				Game.settingsFrame.repaint();
 				Game.mainFrame.requestFocus();
 			}else if(key.getKeyCode() == KeyEvent.VK_SPACE){
 				if(!keyHeld){
 					//Check player bindings
-					for(Player p : Player.getPlayers()){
-						if(key.getKeyCode() == p.getKeyBind()){
-							p.flap();
-						}
-					}
+					Game.player.flap();
 				}
 				keyHeld = true;
 				
 				//Begin game on standby
-				if(Board.current == Stage.STANDBY){
-					Board.current = Stage.PLAYING;
+				if(Game.board.current == Stage.STANDBY){
+					Game.board.current = Stage.PLAYING;
 				}
 			}
 		}
@@ -75,12 +74,12 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if(Board.current == Stage.DEATHMENU){
-			if(Board.getNameInput().length() < 10 && e.getKeyChar()    != '\n'){
-				Board.appendToNameInput(e.getKeyChar());
+		if(Game.board.current == Stage.DEATHMENU){
+			if(Game.board.getNameInput().length() < 10 && e.getKeyChar()    != '\n'){
+				Game.board.appendToNameInput(e.getKeyChar());
 			}else{
-				Board.recordScore();
-				Board.current = Stage.STANDBY;
+				Game.board.recordScore();
+				Game.board.current = Stage.STANDBY;
 			}
 		}
 	}
@@ -106,14 +105,14 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
-		if(Game.boardPanel.getHeight() < 0 || Game.boardPanel.getWidth() < 0){
+		if(Game.board.getHeight() < 0 || Game.board.getWidth() < 0){
 			Game.mainFrame.setSize(Game.width, Game.height);
 		}
 		
 		Game.refreshSettingsFrameLocation();
 		
 		Game.refreshScaledImages();
-		Board.resetGame(Board.current);
+		Game.board.resetGame(Game.board.current);
 	}
 	
 	/**
@@ -125,7 +124,12 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	 */
 	@Override
 	public void windowStateChanged(WindowEvent w) {
-		Game.settingsFrame.setVisible(!Game.settingsFrame.isVisible());
+		if(w.getWindow().isVisible() && displaySettings){
+			Game.settingsFrame.setVisible(true);
+		}else{
+			Game.settingsFrame.setVisible(false);
+		}
+		Game.settingsFrame.repaint();
 	}
 	
 	/**
@@ -145,15 +149,13 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 		//Pause and Play functionality
 		if(!keyHeld){
 			//Check player bindings
-			for(Player p : Player.getPlayers()){
-				p.flap();
-			}
+			Game.player.flap();
 		}
 		keyHeld = true;
 		
 		//Begin game on standby
-		if(Board.current == Stage.STANDBY){
-			Board.current = Stage.PLAYING;
+		if(Game.board.current == Stage.STANDBY){
+			Game.board.current = Stage.PLAYING;
 		}
 	}
 
@@ -163,10 +165,20 @@ public class InputManager implements KeyListener, MouseListener, ComponentListen
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent e) {}
+	public void componentHidden(ComponentEvent e) {
+		Game.settingsFrame.setVisible(false);
+		Game.settingsFrame.repaint();
+	}
 
 	@Override
-	public void componentShown(ComponentEvent e) {}
+	public void componentShown(ComponentEvent e) {
+		if(displaySettings){
+			Game.settingsFrame.setVisible(true);
+		}else{
+			Game.settingsFrame.setVisible(false);
+		}
+		Game.settingsFrame.repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {}

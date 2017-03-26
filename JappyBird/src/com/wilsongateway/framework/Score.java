@@ -6,14 +6,15 @@ public class Score implements Serializable{
 
 	private static final long serialVersionUID = 3064796304425071240L;
 	
-	private int value;
+	private int points;
 	private String name;
 	
-	Score(int value, String name){
-		this.value = value;
+	Score(int points, String name){
+		this.points = points;
 		this.name = name;
 	}
 	
-	public int getValue(){return value;}
+	public int getPoints(){return points;}
+	public void setPoints(int points){this.points = points;}
 	public String getName(){return name;}
 }

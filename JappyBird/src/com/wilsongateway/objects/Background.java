@@ -1,9 +1,10 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.objects;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import com.wilsongateway.framework.Board.Stage;
+import com.wilsongateway.framework.Board;
+import com.wilsongateway.framework.Game;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -52,13 +53,13 @@ public class Background extends Tile{
 		//Check if it is a new board
 		if(backgrounds.size() == 0){
 			//Creating all new Tiles, adds width + tileWidth for overlap
-			for(int position = 0; position < Game.boardPanel.getWidth() + tileWidth; position += tileWidth){
+			for(int position = 0; position < Game.board.getWidth() + tileWidth; position += tileWidth){
 				new Background(position);
 			}
 		}else{
 			//Re-assign the old Tiles
 			int i = 0;
-			for(int position = 0; position < Game.boardPanel.getWidth() + tileWidth; position += tileWidth){
+			for(int position = 0; position < Game.board.getWidth() + tileWidth; position += tileWidth){
 				if(i < backgrounds.size()){
 					backgrounds.get(i).setPosition(position);
 				}else{
@@ -74,7 +75,7 @@ public class Background extends Tile{
 		}
 		
 		//Adjust speed for resizing window
-		speed = Game.heightRatio()*Board.speedScaler;
+		speed = Game.heightRatio()*Game.board.speedScaler;
 	}
 
 	/**
@@ -86,20 +87,23 @@ public class Background extends Tile{
 	 */
 	@Override
 	public void paintTile(Graphics2D g2d){
+		g2d.drawImage(Game.getBackground(), Board.roundMid(position), 0, null);
+		
+		//Dev mode outline
+		if(Game.board.devMode){
+			g2d.drawLine(Board.roundMid(position), 0, Board.roundMid(position), Game.board.getHeight()-platformHeight);
+		}
+	}
+	
+	@Override
+	public void moveTile(){
 		if(position + tileWidth < 0){
 			position = (backgrounds.size()-1) * tileWidth;
 		}
 		
-		g2d.drawImage(Game.getBackground(), Board.roundMid(position), 0, null);
-		
-		//Dev mode outline
-		if(Board.devMode){
-			g2d.drawLine(Board.roundMid(position), 0, Board.roundMid(position), Game.boardPanel.getHeight()-platformHeight);
-		}
-		
-		switch(Board.current){
+		switch(Game.board.current){
 		case PLAYING:
-			position -= speed * scaler;
+			position -= speed * scaler * Game.tpsRatio();
 			break;
 		default:
 			break;

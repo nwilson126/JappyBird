@@ -2,7 +2,6 @@ package com.wilsongateway.framework;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,10 +22,11 @@ public class SaveManager {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			
 			Object obj = ois.readObject();
-
+			ois.close();
+			
 			if(obj instanceof LinkedList){
-				LinkedList<Score> scores = (LinkedList<Score>) obj;
-				Board.setHighscores(scores);
+				LinkedList<Score> scores = (LinkedList<Score>) obj;//TODO
+				Game.board.setHighscores(scores);
 			}else{
 				return false;
 			}

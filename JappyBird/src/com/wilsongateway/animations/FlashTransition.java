@@ -1,8 +1,10 @@
-package com.wilsongateway.framework;
+package com.wilsongateway.animations;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.Transition;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -34,9 +36,9 @@ public class FlashTransition extends Transition{
 	 * Parameters    : DestinationStage : Stage, length : int
 	 * Description   : Calls super() and sets increment to 255/length.
 	 */
-	FlashTransition(Stage destinationStage, int length) {
+	public FlashTransition(Stage destinationStage, int length) {
 		super(destinationStage, length);
-		increment = 255/length;
+		increment = 255/(length/2);
 	}
 
 	/**
@@ -47,20 +49,25 @@ public class FlashTransition extends Transition{
 	 * Description   : Renders the transition and updates the opacity and increment variables.
 	 */
 	@Override
-	protected void paintTransition(Graphics2D g2d) {
-		if(transitionTick < length/2){
-			opacity += increment;
-		}else{
-			opacity -= increment;
-		}
-		
+	public void paintTransition(Graphics2D g2d) {
 		g2d.setColor(new Color(255, 255, 255, (int)opacity));
-		g2d.fillRect(0, 0, Game.boardPanel.getWidth(), Game.boardPanel.getHeight());
+		g2d.fillRect(0, 0, Game.board.getWidth(), Game.board.getHeight());
+	}
+	
+	@Override
+	protected void moveTransition(){
+		if(transitionTick < length/2){
+			if(opacity < 255){
+				opacity += increment;
+			}
+		}else{
+			if(opacity > 0){
+				opacity -= increment;
+			}
+		}
 		
 		if(transitionTick == length/2){
-			Board.current = destinationStage;
-			System.out.println("Stage Changed");
+			Game.board.resetGame(destinationStage);
 		}
-		System.out.println(transitionTick);
 	}
 }

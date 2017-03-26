@@ -1,15 +1,17 @@
 package com.wilsongateway.framework;
 
+import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.wilsongateway.framework.Board.Stage;
+import com.wilsongateway.objects.Background;
+import com.wilsongateway.objects.Pipe;
+import com.wilsongateway.objects.Platform;
+import com.wilsongateway.objects.Tile;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -31,19 +33,18 @@ import com.wilsongateway.framework.Board.Stage;
  */
 @SuppressWarnings("serial")
 public class Board extends JPanel{
-	
-	public static volatile double speedScaler = 2;
-	public static double backgroundScaler = 0.5;
-	public static boolean movingBackground = true;
-	
+		
+	//Stage
 	public enum Stage{MAINMENU, PAUSED, PLAYING, STANDBY, DEATHMENU}
-	public static Stage current;
+	public Stage current = Stage.STANDBY;
 	
-	private static volatile LinkedList<Score> highscores = new LinkedList<Score>();
-	public static int lastScore = 0;
-	private volatile static String nameInput = "";
+	//Highscores
+	private volatile LinkedList<Score> highscores = new LinkedList<Score>();
+	public int lastScore = 0;
+	private volatile String nameInput = "";
 	
-	public static boolean devMode = false;
+	public double speedScaler = 2.5;
+	public boolean devMode = false;
 	
 	/**
 	 * 
@@ -52,7 +53,7 @@ public class Board extends JPanel{
 	 * Description   : Sets current mode to standby.
 	 */
 	public Board(){
-		current = Stage.STANDBY;
+		
 	}
 	
 	/**
@@ -62,8 +63,8 @@ public class Board extends JPanel{
 	 * Return Values : void
 	 * Description   : Sets current mode to standby and refreshes tiles.
 	 */
-	public static void resetGame(Stage goTo){
-		current = goTo;
+	public void resetGame(Stage goTo){
+		Game.board.current = goTo;
 		Tile.refreshTiles();
 	}
 
@@ -72,13 +73,15 @@ public class Board extends JPanel{
 	 * Method Name   : paintComponent
 	 * Parameters    : g : Graphics
 	 * Return Values : none
-	 * Description   : This paintComponent method serves as the global rendering switch for each game component. 
+	 * Description   : This paintComponent method serves as the global rendering pipeline for each game component. 
 	 * 				   The rendering of the game's components depend on the games 'current' Stage enum.           
 	 */
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		
+		if(!Game.spritesLoaded){return;}
 
 		//Paint background tiles
 		for(Background b : Background.getBackgrounds()){
@@ -99,21 +102,43 @@ public class Board extends JPanel{
 		
 		//Render logo if in standby
 		if(current == Stage.STANDBY && Game.getJappyLogo() != null){
-			g2d.drawImage(Game.getJappyLogo(), Game.boardPanel.getWidth()/2 - Game.getJappyLogo().getWidth(null)/2, Game.boardPanel.getHeight()/4, null);
+			g2d.drawImage(Game.getJappyLogo(), Game.board.getWidth()/2 - Game.getJappyLogo().getWidth(null)/2, Game.board.getHeight()/4, null);
 		}
 		
 		//Render highscores if in standby
 		if(current == Stage.STANDBY && Game.dayBackground != null){
 			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*25)));
 			for(int i = 0; i < highscores.size(); i++){
-				g2d.drawString((i+1) + ". " + highscores.get(i).getName() + ": " + highscores.get(i).getValue(), 10, (int) ((i+1)*(Game.heightRatio()*25)));
+				g2d.drawString((i+1) + ". " + highscores.get(i).getName() + ": " + highscores.get(i).getPoints(), 10, (int) ((i+1)*(Game.heightRatio()*25)));
 			}
 		}
 		
 		//Render score if playing
-		if(current == Stage.PLAYING){
+		if(current == Stage.PLAYING || current == Stage.PAUSED){
 			g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*32)));
-			g2d.drawString(Game.player.getPoints() + "", Game.boardPanel.getWidth()/2, Game.boardPanel.getHeight()/10);
+			g2d.drawString(Game.player.getPoints() + "", Game.board.getWidth()/2, Game.board.getHeight()/10);
+		}
+		
+		//Render next score to beat if playing
+		if(current == Stage.PLAYING || current == Stage.PAUSED){
+			//If highscores is not empty and current score is less that the highest
+			if(!highscores.isEmpty() && Game.player.getPoints() < highscores.getFirst().getPoints()){
+				g2d.setFont(new Font("04B_19", Font.PLAIN, (int) (Game.heightRatio()*25)));
+				g2d.setColor(new Color(0, 0, 0, 25));
+				
+				//Search highscores
+				int nextScore = 0;
+				for(int i = 0; i < highscores.size(); i++){
+					if(Game.player.getPoints() < highscores.get(i).getPoints()){
+						nextScore = i;
+					}
+				}
+				
+				String scoreLabel = highscores.get(nextScore).getName() + " " + (highscores.get(nextScore).getPoints() - Game.player.getPoints() + " > ");
+				int stringWidth = g2d.getFontMetrics().stringWidth(scoreLabel);
+				int stringHeight = g2d.getFontMetrics().getHeight();
+				g2d.drawString(scoreLabel, this.getWidth() - stringWidth, this.getHeight() + stringHeight - (Game.getPlatform().getHeight(null)/2));
+			}
 		}
 		
 		//Render name input if in Deathmenu
@@ -129,43 +154,83 @@ public class Board extends JPanel{
 			
 			//Enter name label
 			int stringWidth = g2d.getFontMetrics().stringWidth("Enter Name:");
-			g2d.drawString("Enter Name:", Game.boardPanel.getWidth()/2 - (stringWidth/2), (Game.boardPanel.getHeight()/10)*2);
+			g2d.drawString("Enter Name:", Game.board.getWidth()/2 - (stringWidth/2), (Game.board.getHeight()/10)*2);
 			
 			//Current Text
 			stringWidth = g2d.getFontMetrics().stringWidth(nameOutput);
-			g2d.drawString(nameOutput, Game.boardPanel.getWidth()/2 - (stringWidth/2), (Game.boardPanel.getHeight()/10)*3);
+			g2d.drawString(nameOutput, Game.board.getWidth()/2 - (stringWidth/2), (Game.board.getHeight()/10)*3);
 		}
 		
 		//Render Player if not in main menu
 		if(current == Stage.PAUSED || current == Stage.PLAYING || current == Stage.STANDBY || current == Stage.DEATHMENU){
-			for(Player p : Player.getPlayers()){
-				p.paintPlayer(g2d);
-			}
+			Game.player.paintPlayer(g2d);
 		}
 		
 		//Render transitions
-		if(!Transition.getTransitions().isEmpty()){
-			for(Transition t : Transition.getTransitions()){
-				t.runTransition(g2d);
-			}
+		for(Transition t : Transition.getTransitions()){
+			t.paintTransition(g2d);
 		}
 	}
 	
-	static void recordScore(){
+	public void moveComponents(){		
+		//Move background tiles
+		for(Background b : Background.getBackgrounds()){
+			b.moveTile();
+		}
+		
+		//Move pipes
+		for(Pipe p : Pipe.getPipes()){
+			p.moveTile();
+		}
+
+		//Move platforms
+		for(Platform pf : Platform.getPlatforms()){
+			pf.moveTile();
+		}
+		
+		//Move player
+		Game.player.movePlayer();
+		
+		//Move transitions
+		for(Transition t : Transition.getTransitions()){
+			t.runTransition();
+		}
+	}
+	
+	void recordScore(){
+		//Check for existing scores
+//		boolean scoreExists = false;
+		int highestScore = lastScore;
+//		for(Score s : highscores){
+//			if(s.getName().equalsIgnoreCase(nameInput)){
+//				scoreExists = true;
+//				if(s.getPoints() > highestScore){
+//					highestScore = s.getPoints();
+//				}
+//			}
+//		}
+//		
+//		//Remove other records
+//		for(int i = 0; i < highscores.size(); i++){
+//			if(highscores.get(i).getName().equalsIgnoreCase(nameInput)){
+//				highscores.remove(i);
+//				i--;
+//			}
+//		}
+		
 		//Find where the points belong 
 		int i;
 		for(i = 0; i < highscores.size(); i++){
-			if(lastScore > highscores.get(i).getValue()){
-				System.out.println("added");
+			if(highestScore > highscores.get(i).getPoints()){
 				break;
 			}
 		}
 		
 		//Insert the new record
-		highscores.add(i, new Score(lastScore, nameInput));
+		highscores.add(i, new Score(highestScore, nameInput));
 		
 		//Truncate
-		if(highscores.size() > 5){
+		if(highscores.size() > 10){
 			highscores.removeLast();
 		}
 		
@@ -173,15 +238,15 @@ public class Board extends JPanel{
 		nameInput = "";
 	}
 	
-	static boolean eligibleHighscore(){
-		return highscores.size() < 5 || lastScore > highscores.getLast().getValue();
+	public boolean eligibleHighscore(){
+		return highscores.size() < 10 || lastScore > highscores.getLast().getPoints();
 	}
 	
-	static LinkedList<Score> getHighscores(){
+	LinkedList<Score> getHighscores(){
 		return highscores;
 	}
 	
-	static void setHighscores(LinkedList<Score> scores){
+	void setHighscores(LinkedList<Score> scores){
 		highscores = scores;
 	}
 
@@ -200,11 +265,15 @@ public class Board extends JPanel{
 		}
 	}
 	
-	public static String getNameInput(){
+	public String getNameInput(){
 		return nameInput;
 	}
 	
-	public static void appendToNameInput(char c){
-		nameInput += c;
+	public void appendToNameInput(char c){
+		if(c == '\b' && nameInput.length() != 0){
+			nameInput = nameInput.substring(0, nameInput.length() - 1);
+		}else if(c != '\b'){
+			nameInput += c;
+		}
 	}
 }

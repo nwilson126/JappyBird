@@ -17,6 +17,7 @@ import javax.swing.SpinnerNumberModel;
 
 import com.wilsongateway.framework.Board.Stage;
 import com.wilsongateway.framework.Game.Time;
+import com.wilsongateway.objects.Pipe;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -40,8 +41,7 @@ import com.wilsongateway.framework.Game.Time;
 public class SettingsFrame extends JFrame{
 	
 	private JLabel fpsLabel;
-	private JLabel maxScoreLabel;
-	private int maxScore = 0;
+	private JLabel tpsLabel;
 	
 	/**
 	 * 
@@ -62,7 +62,7 @@ public class SettingsFrame extends JFrame{
 		//Resets all game pieces
 		JButton startBtn = new JButton("Reset");
 		startBtn.addActionListener(e -> {
-			Board.resetGame(Stage.STANDBY);
+			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		add(startBtn);
@@ -78,12 +78,12 @@ public class SettingsFrame extends JFrame{
 		speedPanel.add(new JLabel("Speed:"));
 		
 		//Speed adjustment
-		JSpinner speedSpinner = new JSpinner(new SpinnerNumberModel(Board.speedScaler,0.1,5.0,0.5));
+		JSpinner speedSpinner = new JSpinner(new SpinnerNumberModel(Game.board.speedScaler,0.1,5.0,0.5));
 		((JSpinner.DefaultEditor)speedSpinner.getEditor()).getTextField().setColumns(2);
 		((JSpinner.DefaultEditor)speedSpinner.getEditor()).getTextField().setEditable(false);
 		speedSpinner.addChangeListener(e -> {
-			Board.speedScaler = (double)speedSpinner.getValue();
-			Board.resetGame(Stage.STANDBY);
+			Game.board.speedScaler = (double)speedSpinner.getValue();
+			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		speedSpinner.addFocusListener(new FocusListener(){
@@ -111,7 +111,7 @@ public class SettingsFrame extends JFrame{
 		((JSpinner.DefaultEditor)spacingSpinner.getEditor()).getTextField().setEditable(false);
 		spacingSpinner.addChangeListener(e -> {
 			Pipe.spacing = (int)spacingSpinner.getValue();
-			Board.resetGame(Stage.STANDBY);
+			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		spacingPanel.add(spacingSpinner);
@@ -129,39 +129,38 @@ public class SettingsFrame extends JFrame{
 		timeSelector.setSelectedItem(Time.DAY);
 		timeSelector.addActionListener(e -> {
 			Game.currentTime = (Time) timeSelector.getSelectedItem();
-			Board.resetGame(Stage.STANDBY);
+			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		timePanel.add(timeSelector);
-		
-		//JLabels to display current statistics
-		maxScoreLabel = new JLabel("Max Score: 0");
-		add(maxScoreLabel);
-		
-		add(new JLabel("________________"));
-		
+				
 		//Dev mode selection
 		JCheckBox devCheckBox = new JCheckBox("Dev Mode");
 		devCheckBox.setBackground(new Color(222, 216, 149));
 		devCheckBox.addActionListener(e -> {
-			Board.devMode = devCheckBox.isSelected();
-			Board.resetGame(Stage.STANDBY);
+			Game.board.devMode = devCheckBox.isSelected();
+			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});
 		add(devCheckBox);
 		
-		//FPS Stat
+		add(new JLabel("________________"));
+		
+		//Stats
 		fpsLabel = new JLabel();
 		add(fpsLabel);
 		
+		tpsLabel = new JLabel();
+		add(tpsLabel);
+		
 		//JFrame configuration
-		setVisible(false);
+		setVisible(true);
 		setSize(startBtn.getWidth()*2, 300);
 		this.addFocusListener(new FocusListener(){
 
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				Game.boardPanel.requestFocus();
+				Game.board.requestFocus();
 			}
 
 			@Override
@@ -181,17 +180,7 @@ public class SettingsFrame extends JFrame{
 		fpsLabel.setText("FPS: " + Game.fps);
 	}
 	
-	/**
-	 * 
-	 * Method Name   : refreshMaxScoreLabel
-	 * Parameters    : none
-	 * Return Values : void
-	 * Description   : Resets the scoreLabel's text.
-	 */
-	public void refreshMaxScoreLabel(){
-		if(Game.player.getPoints() > maxScore){
-			maxScoreLabel.setText("Max Score: " + Game.player.getPoints());
-			maxScore = Game.player.getPoints();
-		}
+	public void refreshTPSLabel(double tps) {
+		tpsLabel.setText(String.format("TPS: %.2f", tps));
 	}
 }

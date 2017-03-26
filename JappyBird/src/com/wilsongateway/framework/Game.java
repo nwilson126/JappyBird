@@ -8,12 +8,13 @@ import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import com.wilsongateway.framework.Board.Stage;
+import com.wilsongateway.objects.Player;
+import com.wilsongateway.objects.Tile;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -39,15 +40,16 @@ public class Game {
 	//Constants
 	public static int width = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth()/3;
 	public static int height = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getHeight()/2;
-	public static int fps = 60;
-	public static int fpsCap = 60;
+	public static int fps = 45;
+	public static int fpsCap = 120;
+	public static int tps = 45;
 	
 	//Static game variables
-	public static Thread tick;
+	public static Thread frames;
+	public static Thread ticks;
 	public static JFrame mainFrame;
 	public static SettingsFrame settingsFrame;
-	public static Board boardPanel;
-	public static double flappyTick = 0;
+	public static Board board;
 	public static Player player;
 	
 	public enum Time {DAY, NIGHT}
@@ -76,6 +78,7 @@ public class Game {
 	private static Image scaledFlappyDown;
 	private static Image scaledJappyLogo;
 	
+	public static boolean spritesLoaded = false;
 	/**
 	 * 
 	 * Method Name   : [Constructor]
@@ -85,17 +88,29 @@ public class Game {
 	private Game(){
 		loadResources();
 		
-		boardPanel = new Board();
+		board = new Board();
+		player = new Player();
 		
+		//Load Save File
 		if(SaveManager.saveFileExists()){
-			System.out.println("file exists");
 			SaveManager.loadHighscores();
-			System.out.println(Board.getHighscores());
 		}else{
-			System.out.println("file doesn't exist");
-			SaveManager.saveHighscores(Board.getHighscores());
+			SaveManager.saveHighscores(Game.board.getHighscores());
 		}
 		
+		initGUI();
+		
+		loadSprites();
+		
+		Tile.refreshTiles();
+		player.resetPlayer();
+		
+		startTickLoop();
+		
+		startFrameLoop();
+	}
+	
+	private void initGUI() {
 		mainFrame = new JFrame("JappyBird");
 		mainFrame.setSize(width, height);
 		mainFrame.setMinimumSize(new Dimension(100,100));
@@ -103,18 +118,14 @@ public class Game {
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		mainFrame.setAlwaysOnTop(true);
-		mainFrame.add(boardPanel);
+		mainFrame.add(board);
 		
 		settingsFrame = new SettingsFrame();
 		settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		settingsFrame.setLocationRelativeTo(mainFrame);
 		refreshSettingsFrameLocation();
 		settingsFrame.setAlwaysOnTop(true);
-		settingsFrame.setVisible(true);
-		
-		loadSprites();
-		
-		Tile.refreshTiles();
+		settingsFrame.setVisible(false);
 		
 		InputManager manager = new InputManager();
 		mainFrame.addMouseListener(manager);
@@ -125,9 +136,7 @@ public class Game {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//Save on close
-				if(SaveManager.saveHighscores(Board.getHighscores())){
-					System.out.println("Save successful");
-				}
+				SaveManager.saveHighscores(Game.board.getHighscores());
 				System.exit(0);
 			}
 			//Unused
@@ -144,13 +153,8 @@ public class Game {
 			@Override
 			public void windowOpened(WindowEvent e) {}
 		});
-		
-		//Create main player and set initial scene
-		player = new Player();
-		
-		initTick();
 	}
-	
+
 	/**
 	 * 
 	 * Method Name   : loadResources
@@ -161,7 +165,7 @@ public class Game {
 	private void loadResources() {
 		//Load sprite sheet
 		try {
-			atlas = ImageIO.read(getClass().getResource("atlas.png"));
+			atlas = ImageIO.read(getClass().getResource("/resources/atlas.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
@@ -219,25 +223,27 @@ public class Game {
 		
 		jappyLogo = atlas.getSubimage(712, 182, 169, 48);
 		refreshScaledImages();
+		
+		spritesLoaded = true;
 	}
 	
 	/**
 	 * 
-	 * Method Name   : initTick
+	 * Method Name   : startFrameLoop
 	 * Parameters    : none
 	 * Return Values : void
-	 * Description   : Uses a separate thread to maintain a constant refresh rate of 60fps.
+	 * Description   : Uses a separate thread to maintain a constant frame refresh rate of 60fps.
 	 */
-	private void initTick(){
-		tick = new Thread(new Runnable(){
+	private void startFrameLoop(){
+		frames = new Thread(new Runnable(){
 
 			@Override
 			public void run() {
 				long lastTime;
 				while(true){
 					lastTime = System.nanoTime();
-					boardPanel.repaint();
-					mainFrame.getContentPane().getWidth();
+					board.repaint();
+
 					width = mainFrame.getContentPane().getWidth();
 					height = mainFrame.getContentPane().getHeight();
 					
@@ -263,8 +269,49 @@ public class Game {
 			}
 			
 		});
-		tick.start();
+		frames.start();
 	}
+	
+	
+	/**
+	 * 
+	 * Method Name   : startTickLoop
+	 * Parameters    : none
+	 * Return Values : void
+	 * Description   : Uses a separate thread to maintain a constant tick speed
+	 */
+	private void startTickLoop(){
+		ticks = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				long lastTime;
+				while(true){
+					lastTime = System.nanoTime();
+
+					board.moveComponents();
+					
+					try {
+						long timeElapsed = System.nanoTime() - lastTime;
+						long sleepTime = ((1000000000/tps) - timeElapsed)/1000000;
+						
+						if(sleepTime > 0){
+							Thread.sleep(sleepTime);
+
+						}
+						
+						settingsFrame.refreshTPSLabel(1.0/(((double)(System.nanoTime() - lastTime))/1000000000));
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						break;
+					}
+				}
+			}
+			
+		});
+		ticks.start();
+	}
+	
 	
 	/**
 	 * 
@@ -274,8 +321,8 @@ public class Game {
 	 * Description   : Scales the loaded sub-images so that they fit the aspect ratio of the JFrame.
 	 */
 	public static void refreshScaledImages(){
-		scaledDayBackground = dayBackground.getScaledInstance(-1, boardPanel.getHeight(), Image.SCALE_FAST);
-		scaledNightBackground = nightBackground.getScaledInstance(-1, boardPanel.getHeight(), Image.SCALE_FAST);
+		scaledDayBackground = dayBackground.getScaledInstance(-1, board.getHeight(), Image.SCALE_FAST);
+		scaledNightBackground = nightBackground.getScaledInstance(-1, board.getHeight(), Image.SCALE_FAST);
 		scaledPlatform = platform.getScaledInstance(-1, (int) (heightRatio()*platform.getHeight()), Image.SCALE_FAST);
 		scaledPipeTop = pipeTop.getScaledInstance(-1, (int) (heightRatio()*pipeTop.getHeight()), Image.SCALE_FAST);
 		scaledPipeBottom = pipeBottom.getScaledInstance(-1, (int) (heightRatio()*pipeBottom.getHeight()), Image.SCALE_FAST);
@@ -296,6 +343,10 @@ public class Game {
 		return (double)scaledDayBackground.getHeight(null)/(double)dayBackground.getHeight();
 	}
 	
+	public static double tpsRatio(){
+		return 60.0/tps;
+	}
+	
 	/**
 	 * 
 	 * Method Name   : getFlappy
@@ -303,9 +354,9 @@ public class Game {
 	 * Return Values : Image
 	 * Description   : Returns the current bird image using a %4 to cycle through the images.
 	 */
-	public static Image getFlappy(){
+	public static Image getFlappy(double state){
 		Image temp = null;
-		switch(((int)flappyTick)%4){
+		switch(((int)state)%4){
 		case 0:
 			temp = scaledFlappyUp;
 			break;
@@ -317,15 +368,6 @@ public class Game {
 			break;
 		case 3:
 			temp = scaledFlappyMid;
-		}
-		
-		//Only plays animation if game is playing
-		if(Board.current == Stage.PLAYING){
-			if(flappyTick > 40){
-				flappyTick = 0;
-			}else{
-				flappyTick += 0.2;
-			}
 		}
 		
 		return temp;
