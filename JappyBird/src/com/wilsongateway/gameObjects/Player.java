@@ -1,4 +1,4 @@
-package com.wilsongateway.objects;
+package com.wilsongateway.gameObjects;
 
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -6,6 +6,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import com.wilsongateway.animations.FlashTransition;
 import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.GameObject;
 import com.wilsongateway.framework.Transition;
 import com.wilsongateway.framework.Board.Stage;
 
@@ -76,12 +77,12 @@ public class Player {
 	
 	/**
 	 * 
-	 * Method Name   : paintPlayer
+	 * Method Name   : paint
 	 * Parameters    : g2d : Graphics
 	 * Return Values : void
 	 * Description   : Renders the current player and adjusts position variables.
 	 */
-	public void paintPlayer(Graphics2D g2d){
+	public void paint(Graphics2D g2d){
 		//Render images
 		g2d.rotate(theta, x + Game.getFlappyUp().getWidth(null)/2, (int) (Game.heightRatio()*y) + Game.getFlappyUp().getHeight(null)/2);
 		g2d.drawImage(Game.getFlappy(flapState), x, (int) (Game.heightRatio()*y), null);
@@ -96,7 +97,7 @@ public class Player {
 		}
 	}
 	
-	public void movePlayer(){
+	public void move(){
 		//Status check
 		if(alive){
 			if(Game.board.current == Stage.PLAYING){

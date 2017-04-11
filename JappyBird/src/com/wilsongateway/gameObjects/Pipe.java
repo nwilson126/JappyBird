@@ -1,4 +1,4 @@
-package com.wilsongateway.objects;
+package com.wilsongateway.gameObjects;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.wilsongateway.framework.Board;
 import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.GameObject;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -30,7 +31,7 @@ import com.wilsongateway.framework.Board.Stage;
  *	
  * Description: Represents a pipe game tile. Moves across screen at a constant rate and detects if the current player collides with itself.
  */
-public class Pipe extends Tile{
+public class Pipe extends Tile {
 	
 	//Height and random generator for height resetting
 	private int y;
@@ -116,7 +117,7 @@ public class Pipe extends Tile{
 	 * Description   : Paints the pipes in their current position and then advances the position.
 	 */
 	@Override
-	public void paintTile(Graphics2D g2d){
+	public void paint(Graphics2D g2d){
 		g2d.drawImage(Game.getPipeBottom(), Board.roundMid(position), y - Game.getPipeTop().getHeight(null) + heightSpacing, null);
 		g2d.drawImage(Game.getPipeTop(), Board.roundMid(position), y + gap, null);
 		
@@ -130,7 +131,7 @@ public class Pipe extends Tile{
 	
 
 	@Override
-	public void moveTile(){
+	public void move(){
 		//Reset pipe at right side
 		if(position + pipeSpacing < 0){
 			position = (pipes.size()-1) * pipeSpacing;

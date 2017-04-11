@@ -1,10 +1,11 @@
-package com.wilsongateway.objects;
+package com.wilsongateway.gameObjects;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import com.wilsongateway.framework.Board;
 import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.GameObject;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -24,7 +25,7 @@ import com.wilsongateway.framework.Game;
  *	
  * Description: Represents a background tile. This tile moves across the screen at a constant rate and has no user control.
  */
-public class Background extends Tile{
+public class Background extends Tile {
 	
 	private static double scaler = 0.25;
 	private static double speed;
@@ -86,7 +87,7 @@ public class Background extends Tile{
 	 * Description   : Renders the current background tile and advances the position.
 	 */
 	@Override
-	public void paintTile(Graphics2D g2d){
+	public void paint(Graphics2D g2d){
 		g2d.drawImage(Game.getBackground(), Board.roundMid(position), 0, null);
 		
 		//Dev mode outline
@@ -96,7 +97,7 @@ public class Background extends Tile{
 	}
 	
 	@Override
-	public void moveTile(){
+	public void move(){
 		if(position + tileWidth < 0){
 			position = (backgrounds.size()-1) * tileWidth;
 		}

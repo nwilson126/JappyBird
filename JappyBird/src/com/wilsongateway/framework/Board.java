@@ -8,10 +8,10 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
-import com.wilsongateway.objects.Background;
-import com.wilsongateway.objects.Pipe;
-import com.wilsongateway.objects.Platform;
-import com.wilsongateway.objects.Tile;
+import com.wilsongateway.gameObjects.Background;
+import com.wilsongateway.gameObjects.Pipe;
+import com.wilsongateway.gameObjects.Platform;
+import com.wilsongateway.gameObjects.Tile;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -43,7 +43,7 @@ public class Board extends JPanel{
 	public int lastScore = 0;
 	private volatile String nameInput = "";
 	
-	public double speedScaler = 2.5;
+	public double speedScaler = 2;
 	public boolean devMode = false;
 	
 	/**
@@ -85,19 +85,19 @@ public class Board extends JPanel{
 
 		//Paint background tiles
 		for(Background b : Background.getBackgrounds()){
-			b.paintTile(g2d);
+			b.paint(g2d);
 		}
 		
 		//Render Pipes if not in main menu
 		if(current == Stage.PAUSED || current == Stage.PLAYING || current == Stage.STANDBY){
 			for(Pipe p : Pipe.getPipes()){
-				p.paintTile(g2d);
+				p.paint(g2d);
 			}
 		}
 
 		//Paint platforms
 		for(Platform pf : Platform.getPlatforms()){
-			pf.paintTile(g2d);
+			pf.paint(g2d);
 		}
 		
 		//Render logo if in standby
@@ -163,7 +163,7 @@ public class Board extends JPanel{
 		
 		//Render Player if not in main menu
 		if(current == Stage.PAUSED || current == Stage.PLAYING || current == Stage.STANDBY || current == Stage.DEATHMENU){
-			Game.player.paintPlayer(g2d);
+			Game.player.paint(g2d);
 		}
 		
 		//Render transitions
@@ -175,21 +175,21 @@ public class Board extends JPanel{
 	public void moveComponents(){		
 		//Move background tiles
 		for(Background b : Background.getBackgrounds()){
-			b.moveTile();
+			b.move();
 		}
 		
 		//Move pipes
 		for(Pipe p : Pipe.getPipes()){
-			p.moveTile();
+			p.move();
 		}
 
 		//Move platforms
 		for(Platform pf : Platform.getPlatforms()){
-			pf.moveTile();
+			pf.move();
 		}
 		
 		//Move player
-		Game.player.movePlayer();
+		Game.player.move();
 		
 		//Move transitions
 		for(Transition t : Transition.getTransitions()){
@@ -236,6 +236,9 @@ public class Board extends JPanel{
 		
 		//Clear last name
 		nameInput = "";
+		
+		//Save highscores file
+		SaveManager.saveHighscores(highscores);
 	}
 	
 	public boolean eligibleHighscore(){

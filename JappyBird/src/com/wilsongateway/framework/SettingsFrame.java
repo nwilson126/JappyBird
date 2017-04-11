@@ -17,7 +17,7 @@ import javax.swing.SpinnerNumberModel;
 
 import com.wilsongateway.framework.Board.Stage;
 import com.wilsongateway.framework.Game.Time;
-import com.wilsongateway.objects.Pipe;
+import com.wilsongateway.gameObjects.Pipe;
 
 /**
  * Name	 	: Nicholas Lane Wilson

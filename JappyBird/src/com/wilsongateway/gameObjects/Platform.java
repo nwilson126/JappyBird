@@ -1,10 +1,11 @@
-package com.wilsongateway.objects;
+package com.wilsongateway.gameObjects;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import com.wilsongateway.framework.Board;
 import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.GameObject;
 import com.wilsongateway.framework.Board.Stage;
 
 /**
@@ -26,7 +27,7 @@ import com.wilsongateway.framework.Board.Stage;
  * Description: Represents a sub class of Tile. Contains the behaviors of the platform game object.
  * 				Handles the moving and rendering of the platform.
  */
-public class Platform extends Tile{
+public class Platform extends Tile {
 
 	protected static ArrayList<Platform> platforms = new ArrayList<Platform>();
 	
@@ -82,7 +83,7 @@ public class Platform extends Tile{
 	 * Description   : Renders the current platform and updates the positon.
 	 */
 	@Override
-	public void paintTile(Graphics2D g2d){
+	public void paint(Graphics2D g2d){
 		g2d.drawImage(Game.getPlatform(), Board.roundMid(position), Game.board.getHeight()-platformHeight, null);
 		
 		//Dev mode outline
@@ -92,7 +93,7 @@ public class Platform extends Tile{
 	}
 	
 	@Override
-	public void moveTile(){
+	public void move(){
 		if(position + tileWidth < 0){
 			position = (platforms.size()-1) * tileWidth;
 		}

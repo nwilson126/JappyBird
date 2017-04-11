@@ -1,9 +1,9 @@
-package com.wilsongateway.objects;
+package com.wilsongateway.gameObjects;
 
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import com.wilsongateway.framework.Game;
+import com.wilsongateway.framework.GameObject;
 
 /**
  * Name	 	: Nicholas Lane Wilson
@@ -23,7 +23,7 @@ import com.wilsongateway.framework.Game;
  *	
  * Description: Abstract class that represents a game item that moves across the screen at a constant rate.
  */
-public abstract class Tile {
+public abstract class Tile extends GameObject {
 	
 	//Position variables
 	protected double position;
@@ -47,24 +47,6 @@ public abstract class Tile {
 		this.position = position;
 		tiles.add(this);
 	}
-	
-	/**
-	 * 
-	 * Method Name   : paintTile
-	 * Parameters    : g2d : Graphics
-	 * Return Values : void
-	 * Description   : Rendering of current tile to be implemented in sub classes.
-	 */
-	public abstract void paintTile(Graphics2D g2d);
-	
-	/**
-	 * 
-	 * Method Name   : moveTile
-	 * Parameters    : none
-	 * Return Values : void
-	 * Description   : Moving of current tile to be implemented in sub classes.
-	 */
-	public abstract void moveTile();
 	
 	/**
 	 * 

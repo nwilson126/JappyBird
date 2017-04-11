@@ -13,8 +13,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import com.wilsongateway.framework.Board.Stage;
-import com.wilsongateway.objects.Player;
-import com.wilsongateway.objects.Tile;
+import com.wilsongateway.gameObjects.Player;
+import com.wilsongateway.gameObjects.Tile;
 
 /**
  * Name	 	: Nicholas Lane Wilson
