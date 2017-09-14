@@ -60,8 +60,10 @@ public class SettingsFrame extends JFrame{
 		add(new JLabel("________________"));
 		
 		//Resets all game pieces
-		JButton startBtn = new JButton("Reset");
+		JButton startBtn = new JButton("Clear");
 		startBtn.addActionListener(e -> {
+			Game.board.highscores.clear();
+			SaveManager.saveHighscores(Game.board.highscores);
 			Game.board.resetGame(Stage.STANDBY);
 			Game.mainFrame.requestFocus();
 		});

@@ -39,7 +39,7 @@ public class Board extends JPanel{
 	public Stage current = Stage.STANDBY;
 	
 	//Highscores
-	private volatile LinkedList<Score> highscores = new LinkedList<Score>();
+	volatile LinkedList<Score> highscores = new LinkedList<Score>();
 	public int lastScore = 0;
 	private volatile String nameInput = "";
 	

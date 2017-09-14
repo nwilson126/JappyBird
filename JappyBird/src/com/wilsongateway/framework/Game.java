@@ -111,7 +111,7 @@ public class Game {
 	}
 	
 	private void initGUI() {
-		mainFrame = new JFrame("JappyBird");
+		mainFrame = new JFrame("JavaBird");
 		mainFrame.setSize(width, height);
 		mainFrame.setMinimumSize(new Dimension(100,100));
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

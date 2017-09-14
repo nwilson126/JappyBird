@@ -1,7 +1,7 @@
 {
   "version": "v1",
-  "title": "Eclipse Automated Error Reporting",
-  "timestamp": 1471894727086,
+  "title": "Eclipse",
+  "timestamp": 1505193449738,
   "ttl": 10080,
   "helpUrl": "https://dev.eclipse.org/recommenders/community/aeri/v2/help/",
   "feedbackUrl": "http://ctrlflow.com/automated-error-reporting",
@@ -24,9 +24,9 @@
   "acceptedPackages": [
     "ch.qos.*",
     "com.cforcoding.*",
-    "com.ctrlflow.*",
     "com.google.*",
     "com.gradleware.tooling.*",
+    "com.mountainminds.eclemma.*",
     "com.naef.*",
     "com.sun.*",
     "java.*",
@@ -36,17 +36,19 @@
     "org.eclipse.*",
     "org.fordiac.*",
     "org.gradle.*",
+    "org.jacoco.*",
     "org.osgi.*",
     "org.slf4j.*",
     "sun.*"
   ],
-  "acceptOtherPackages": true,
+  "acceptOtherPackages": false,
   "acceptUiFreezes": true,
   "ignoredStatuses": [
     ":java.io.IOException:There is not enough space on the disk",
     ":java.net.*:",
     "org.eclipse.core.filesystem::Could not delete*",
     "org.eclipse.core.filesystem::Could not move*",
+    "org.eclipse.core.resources:org.eclipse.core.internal.resources.ResourceException:Resource is out of sync with the file system*",
     "org.eclipse.core.runtime::Invalid input url*",
     "org.eclipse.epp.mpc.ui:java.io.IOException:",
     "org.eclipse.equinox.p2.*::",
@@ -55,5 +57,5 @@
     "org.eclipse.pde.core::The current target platform contains errors*",
     "org.eclipse.ui::Conflicting handlers for*"
   ],
-  "problemsZipLastDownloadTimestamp": 1471894742259
+  "problemsZipLastDownloadTimestamp": 1505193482907
 }
