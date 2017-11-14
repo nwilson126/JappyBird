@@ -1,10 +1,10 @@
-# JappyBird
+# JavaBird
 A FlappyBird port in Java, made to run on anything! The goal of this project is to bring a very fun mobile game to PCs. Besides that, I want this game to be 100% dynmically scalable and eventualy feature alternate gamemodes/levels.
 
 <img width="798" alt="capture3" src="https://cloud.githubusercontent.com/assets/865352/16344347/be5cd6ea-3a01-11e6-9a1e-80e7b24a636d.PNG">
 
 # Getting Started
-Once you have cloned this project on your pc, open eclipse and set the repository folder as your workspace folder. It should look something like this: yourDocuments/Github/JappyBird Once it is imported, compile/run the Game.java file to start the game.
+Once you have cloned this project on your pc, open eclipse and set the repository folder as your workspace folder. It should look something like this: yourDocuments/Github/JavaBird Once it is imported, compile/run the Game.java file to start the game.
 
 # Where are we so far?
 
